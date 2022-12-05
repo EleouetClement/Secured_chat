@@ -10,7 +10,7 @@ using System;
 using System.IO;
 using System.Numerics;
 
-namespace opsie_chat_project
+namespace Secured_chat
 {
 	/// <summary>
 	/// Singleton containing the static data needed to encrypte messages
@@ -18,7 +18,11 @@ namespace opsie_chat_project
 	public class ApplicationData<T>
 	{
 		
-		RSAkeys<T> keys;
+		RSASmallKey key;
+
+		public readonly string smallKeysFile = "";
+		public readonly string LargeKeysFile = "";
+
 		static ApplicationData<T> instance;
 		
 		ApplicationData()
@@ -35,12 +39,21 @@ namespace opsie_chat_project
 			return instance;
 		}
 		
-		public void GetKeys(string publickeyFile, string privateKeyFile)
+		public void GetSmallKeys(string publickeyFile, string privateKeyFile, out RSASmallKey copy)
 		{
+			//Fetching public key
+			if(key != null)
+            {
+				copy = key;
+            }
+			key = new RSASmallKey<T>();
 			using(StreamReader rd = new StreamReader("publicKeyFile"))
 			{
-					
+				string line = rd.ReadLine();
+
 			}
+
+			return keys;
 		}
 	}
 }
