@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Secured_chat
+namespace Encryption
 {
     /// <summary>
     /// Define an RSA key

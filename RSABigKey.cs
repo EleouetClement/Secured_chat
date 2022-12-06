@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Secured_chat
+namespace Encryption
 {
     class RSABigKey : RSAKey<BigInteger>
     {

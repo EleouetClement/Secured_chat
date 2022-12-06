@@ -8,25 +8,25 @@
  */
 using System;
 
-namespace Secured_chat
+namespace Encryption
 {
 	/// <summary>
 	/// Set of tools to encrypt and decrypt messages
 	/// </summary>
-	public interface IEnpcryptable
+	public interface IEnpcryptable<T>
 	{
 		/// <summary>
 		/// Encrypt the message using RSA algorithm and small integers
 		/// </summary>
 		/// <param name="m">structure containing the message to encrypt</param>
 		/// <param name="key">1st factor of the public key</param>
-		void Encrypt(RSAKey key);
+		void Encrypt(RSAKey<T> key);
 
 		/// <summary>
 		/// Decrypt the message using RSA algorithm and small integers
 		/// </summary>
 		/// <param name="m"></param>
 		/// <param name="key"></param>
-		void Decrypt(RSAKey key);
+		void Decrypt(RSAKey<T> key);
 	}
 }

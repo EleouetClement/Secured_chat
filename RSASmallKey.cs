@@ -10,7 +10,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Secured_chat
+namespace Encryption
 {
 	/// <summary>
 	/// Structure containing all the informations about the RSA keys

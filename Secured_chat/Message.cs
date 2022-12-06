@@ -8,13 +8,14 @@
  */
 using Secured_chat;
 using System;
+using Encryption;
 
 namespace opsie_chat_project
 {
 	/// <summary>
 	/// Description of Message.
 	/// </summary>
-	public class Message : IEnpcryptable
+	public class Message : IEnpcryptable<int>
 	{
 		string data;
 		string encrypted;
@@ -24,12 +25,12 @@ namespace opsie_chat_project
 		}
 
 
-        public void Decrypt(RSAKey key)
+        public void Decrypt(RSAKey<int> key)
         {
             throw new NotImplementedException();
         }
 
-        public void Encrypt(RSAKey key)
+        public void Encrypt(RSAKey<int> key)
         {
             throw new NotImplementedException();
         }
