@@ -27,20 +27,22 @@ namespace Encryption
         public override void Load(string [] data)
         {
 			e = d = n = 0;
-            if(!int.TryParse(data[0], out n))
+            try
             {
-				throw new Exception("Impossible de parser la valeur de l'exposant n");
+				using (StreamReader rd = new StreamReader(keyFile))
+				{
+					d = int.Parse(rd.ReadLine());
+					e = int.Parse(rd.ReadLine());
+					n = int.Parse(rd.ReadLine());
+				}
+			}
+			catch (IOException)
+            {
+				//File not found a couple of keys need to be created
+				throw new Exception("Need to create a key");
             }
 
-			if (!int.TryParse(data[0], out e))
-			{
-				throw new Exception("Impossible de parser la valeur de l'exposant e");
-			}
-
-			if (!int.TryParse(data[0], out d))
-			{
-				throw new Exception("Impossible de parser la valeur de la clé privé d");
-			}
+			
 		}
 
         public override void Save()
@@ -132,11 +134,13 @@ namespace Encryption
         {
 			int rest = 1;
 			int oldRest = 0;
+			if(a == 0 || b == 0)
+				return 0;
 			if(a < b)
             {
 				int tmp = a;
 				a = b;
-				b = a;
+				b = tmp;
             }
 			rest = b;
 			while(rest != 0)
@@ -157,5 +161,60 @@ namespace Encryption
             }
 			return e;
         }
+
+		/// <summary>
+		/// Unit test for all functions of this class
+		/// </summary>
+		/// <param name="key"></param>
+		public static void TestPlan(RSASmallKey key)
+		{
+			#region Test Pgcd
+			int[] a = { 221, -98, 465, 86846, -4632, 0, 6584 };
+			int[] b = { 782, 651, 423, 219879, 0, 8465, 6846848 };
+			int[] expected = { 17, -7, 3, 1, 0, 0, 8 };
+
+			Console.WriteLine("Avec des entiers :");
+			Console.WriteLine("Test du pgcd : ");
+			bool ok = true;
+			for (int i = 0; i < a.Length; i++)
+			{
+				int result = key.Pgcd(a[i], b[i]);
+				Console.Write("Pgcd(" + a[i] + "," + b[i] + ")=" + expected[i] + "? " + result);
+				if (result != expected[i])
+				{
+					ok = false;
+					Console.Write("...........KO");
+				}
+				else
+				{
+					Console.Write("...........OK");
+				}
+				Console.WriteLine("");
+			}
+			Console.WriteLine("Test de pgcd : " + ((ok) ? "Ok" : "Ko"));
+			#endregion
+			#region Test IsPrime
+			Console.WriteLine("Test de primalité : ");
+			a = new int[] { 0, 1, 2, 3, -8, 1181, 691, 1110, 50459, 168281 };
+			bool[] prime = { false, false, true, true, false, true, true, false, true, true };
+			ok = true;
+			for (int i = 0; i < a.Length; i++)
+			{
+				bool result = key.IsPrime(a[i]);
+				Console.Write("IsPrime("+a[i]+") expected "+prime[i]+ " got " + key.IsPrime(a[i]));
+				if(result != prime[i])
+                {
+					Console.Write("...........KO");
+					ok = false;
+                }
+				else
+                {
+					Console.Write("...........OK");
+				}
+				Console.WriteLine("");
+			}
+			Console.WriteLine("Test de primalité : " + ((ok) ? "Ok" : "Ko"));
+			#endregion
+		}
     }
 }

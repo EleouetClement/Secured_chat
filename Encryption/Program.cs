@@ -11,7 +11,11 @@ namespace Encryption
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Test des outils de chiffrement:");
+            RSASmallKey key = new RSASmallKey();
+            RSASmallKey.TestPlan(key);
+            Console.WriteLine("Fin des tests, pressez une touche pour continuer");
+            Console.ReadLine();
         }
     }
 }
