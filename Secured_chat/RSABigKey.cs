@@ -7,13 +7,8 @@ using System.Threading.Tasks;
 
 namespace Secured_chat
 {
-    class RSABigKey : RSAKey
+    class RSABigKey : RSAKey<BigInteger>
     {
-        BigInteger d;
-        BigInteger n;
-        BigInteger e;
-
-
         public override void Load(string[] data)
         {
             throw new NotImplementedException();

@@ -7,40 +7,18 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Secured_chat
 {
 	/// <summary>
 	/// Structure containing all the informations about the RSA keys
 	/// </summary>
-	public class RSASmallKey : RSAKey, RSATools<int>
+	public sealed class RSASmallKey : RSAKey<int>
 	{
-		int e;
-		int d;
-		int n;		
-				
-		/// <summary>
-		/// Return the public key as a Tuple, first value is e and the second is n
-		/// </summary>
-		public Tuple<int, int>PublicKey
-		{
-			get
-			{
-				return new Tuple<int, int>(e, n);
-			}
-		}
 		
-		/// <summary>
-		/// Return the private key as a Tuple, first value is d and the second is n
-		/// </summary>
-		public Tuple<int, int> PrivateKey
-		{
-			get
-			{
-				return new Tuple<int, int>(d, n);
-			}
-		}
-
+		private static readonly string keyFile = ".smallKeyFile.key";
 
         /// <summary>
         /// Reads all 3 lines from the data array and creates the 3 components of the key
@@ -67,10 +45,15 @@ namespace Secured_chat
 
         public override void Save()
         {
-            throw new NotImplementedException();
+			using(StreamWriter writer = new StreamWriter(keyFile))
+            {
+				writer.WriteLine(BitConverter.GetBytes(d));
+				writer.WriteLine(BitConverter.GetBytes(n));
+				writer.WriteLine(BitConverter.GetBytes(e));
+            }
         }
 
-		public void CreateKeys(int p, int q, int e)
+		public override void CreateKeys(int p, int q, int e)
 		{
 			p = FindPrime(p);
 			q = FindPrime(q);
@@ -81,7 +64,7 @@ namespace Secured_chat
 		}
 
 
-		public int ExtendedEuclide(int e, int phi)
+		protected override int ExtendedEuclide(int e, int phi)
         {
 			bool reverse = false;
 			if(phi > e)
@@ -117,7 +100,7 @@ namespace Secured_chat
         }
 		
 
-        public int FindPrime(int number)
+        protected override int FindPrime(int number)
         {
             while(!IsPrime(number))
             {
@@ -126,7 +109,7 @@ namespace Secured_chat
 			return number;
         }
 
-        public bool IsPrime(int number)
+		protected override bool IsPrime(int number)
         {
 			if (number < 2 || (number % 2 == 0 && number != 2))
 			{
@@ -140,12 +123,12 @@ namespace Secured_chat
 			return true;
 		}
 
-        public int Phi(int p, int q)
+		protected override int Phi(int p, int q)
         {
 			return (p - 1) * (q - 1);
         }
 
-        public int Pgcd(int a, int b)
+		protected override int Pgcd(int a, int b)
         {
 			int rest = 1;
 			int oldRest = 0;
@@ -166,7 +149,7 @@ namespace Secured_chat
 			return oldRest;
         }
 
-        public int Exposant(int e, int phi_n)
+		protected override int Exposant(int e, int phi_n)
         {
 			while(Pgcd(e, phi_n) != 1)
             {
