@@ -13,7 +13,7 @@ namespace Secured_chat
 	/// <summary>
 	/// Set of tools to encrypt and decrypt messages
 	/// </summary>
-	public interface IEnpcryptable<T>
+	public interface IEnpcryptable
 	{
 		/// <summary>
 		/// Encrypt the message using RSA algorithm and small integers

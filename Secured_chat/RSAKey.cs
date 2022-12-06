@@ -16,6 +16,11 @@ namespace Secured_chat
         /// Parse the key from a file
         /// </summary>
         /// <param name="data"></param>
-        public abstract void Parse(string [] data);
+        public abstract void Load(string [] data);
+
+        /// <summary>
+        /// Save key data into a file
+        /// </summary>
+        public abstract void Save();
     }
 }
