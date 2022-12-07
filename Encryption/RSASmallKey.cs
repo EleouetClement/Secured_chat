@@ -163,7 +163,7 @@ namespace Encryption
         }
 
 		/// <summary>
-		/// Unit test for all functions of this class
+		/// Unit test for all functions of this class. A FINIR
 		/// </summary>
 		/// <param name="key"></param>
 		public static void TestPlan(RSASmallKey key)

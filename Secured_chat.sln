@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33027.164
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Secured_chat", "Secured_chat\Secured_chat.csproj", "{03CD3351-2CB4-4E0B-B214-F6838CD1E3E2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Encryption", "Encryption\Encryption.csproj", "{B81759D0-02C2-460C-A38A-507DC1246B2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serveur", "Serveur\Serveur.csproj", "{D163905D-309F-47F3-9C55-E36D2691F3DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{B81759D0-02C2-460C-A38A-507DC1246B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B81759D0-02C2-460C-A38A-507DC1246B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B81759D0-02C2-460C-A38A-507DC1246B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D163905D-309F-47F3-9C55-E36D2691F3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D163905D-309F-47F3-9C55-E36D2691F3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D163905D-309F-47F3-9C55-E36D2691F3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D163905D-309F-47F3-9C55-E36D2691F3DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
