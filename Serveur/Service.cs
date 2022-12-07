@@ -13,7 +13,11 @@ namespace Serveur
     /// </summary>
     internal class Service
     {
+
+        private List<User> _connectedUsers;
+        
         private Socket _serverSocket;
+
 
         /// <summary>
         /// Maximum number of pending connections
@@ -31,19 +35,28 @@ namespace Serveur
         private IPAddress _address;
         public Service(int backlog, int port = 5000)
         {
-            _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _backlog = backlog;
-            _port = port;
+            SetUpServer(backlog, port);
             _address = IPAddress.Any;
-
         }
         public Service(int backlog, IPAddress address, int port = 5000)
+        {
+            SetUpServer(backlog, port);
+            _address = address;
+        }
+
+        /// <summary>
+        /// Basing variables initialization
+        /// </summary>
+        /// <param name="backlog"></param>
+        /// <param name="port"></param>
+        private void SetUpServer(int backlog, int port)
         {
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _backlog = backlog;
             _port = port;
-            _address = address;
+            _connectedUsers = new List<User>();
         }
+
         /// <summary>
         /// Set up the serveur listening configuration
         /// </summary>
@@ -60,6 +73,15 @@ namespace Serveur
         public void StartListening()
         {
             _serverSocket.Listen(_backlog);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        }
+
+        private void AcceptCallback(IAsyncResult AR)
+        {
+            Socket socket = _serverSocket.EndAccept(AR);
+            User newUser = new User();
+            _connectedUsers.Add();
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
 
