@@ -14,35 +14,35 @@ namespace Serveur
     internal class Service
     {
 
-        private List<User> _connectedUsers;
+        private static List<User> _connectedUsers;
 
-        private byte[] _buffer;
-        private Socket _serverSocket;
+        private static byte[] _buffer;
+        private static Socket _serverSocket;
 
 
         /// <summary>
         /// Maximum number of pending connections
         /// </summary>
-        private int _backlog;
+        private static int _backlog;
 
         /// <summary>
         /// Port number the services needs to listen to. Default value is 5000
         /// </summary>
-        private int _port;
+        private static int _port;
 
         /// <summary>
         /// The IP address the server needs to use. default address is IPAddress.Any 
         /// </summary>
-        private IPAddress _address;
+        private static IPAddress _address;
         public Service(int backlog, int port = 5000, int bufferSize=1024)
         {
             SetUpServer(backlog, port, bufferSize);
-            _address = IPAddress.Any;
+            _address = IPAddress.Loopback;
         }
         public Service(int backlog, IPAddress address, int port = 5000, int bufferSize = 1024)
         {
             SetUpServer(backlog, port, bufferSize);
-            _address = address;
+            _address = IPAddress.Loopback;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Serveur
         /// </summary>
         /// <param name="backlog"></param>
         /// <param name="port"></param>
-        private void SetUpServer(int backlog, int port , int bufferSize)
+        private static void SetUpServer(int backlog, int port , int bufferSize)
         {
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _backlog = backlog;
@@ -63,23 +63,28 @@ namespace Serveur
         /// Set up the serveur listening configuration
         /// </summary>
         /// <param name="portNumber"></param>
-        public void InitializeServer()
+        public static void InitializeServer()
         {
             Console.WriteLine("Initialisation du serveur");
-            _serverSocket.Bind(new IPEndPoint(_address, _port));
+          _serverSocket.Bind(new IPEndPoint(_address, _port));
+           
+
+
         }
 
         /// <summary>
         /// Starts listenings for clients
         /// </summary>
-        public void StartListening()
+        public static void StartListening()
         {
             Console.WriteLine("En Attente de connexion...");
+           
             _serverSocket.Listen(_backlog);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+            
         }
 
-        private void AcceptCallback(IAsyncResult AR)
+        private static void AcceptCallback(IAsyncResult AR)
         {
             Console.WriteLine("Nouvelle connexion...");
             Socket socket = _serverSocket.EndAccept(AR);
@@ -87,7 +92,7 @@ namespace Serveur
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
-        private void ReceiveCallBack(IAsyncResult AR)
+        private static void ReceiveCallBack(IAsyncResult AR)
         {
             Socket socket = (Socket)AR.AsyncState;
             int receivedDataAmount = socket.EndReceive(AR);
@@ -102,6 +107,9 @@ namespace Serveur
             
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
         }
+
+
+
 
 
     }

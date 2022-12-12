@@ -15,10 +15,12 @@ namespace Serveur
         static void Main(string[] args)
         {
             Service chatUserManager = new Service(5);
-            chatUserManager.InitializeServer();
-            chatUserManager.StartListening();
+            /*chatUserManager.*/Service.InitializeServer();
+         //   /*chatUserManager.*/Service.StartListening();
             Console.WriteLine("Arret du service, Pressez une touche pour continuer...");
             Console.ReadLine();
         }
     }
 }
+
+
