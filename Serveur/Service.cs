@@ -72,36 +72,36 @@ namespace Serveur
         /// <summary>
         /// Starts listenings for clients
         /// </summary>
-        public void StartListening()
-        {
-            Console.WriteLine("En Attente de connexion...");
-            _serverSocket.Listen(_backlog);
-            _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
-        }
+        //public static void StartListening()
+        //{
+        //    Console.WriteLine("En Attente de connexion...");
+        //    _serverSocket.Listen(_backlog);
+        //    _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        //}
 
-        private void AcceptCallback(IAsyncResult AR)
-        {
-            Console.WriteLine("Nouvelle connexion...");
-            Socket socket = _serverSocket.EndAccept(AR);
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
-            _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
-        }
+        //private static void AcceptCallback(IAsyncResult AR)
+        //{
+        //    Console.WriteLine("Nouvelle connexion...");
+        //    Socket socket = _serverSocket.EndAccept(AR);
+        //    socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+        //    _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        //}
 
-        private void ReceiveCallBack(IAsyncResult AR)
-        {
-            Socket socket = (Socket)AR.AsyncState;
-            int receivedDataAmount = socket.EndReceive(AR);
-            byte[] dataBuff = new byte[receivedDataAmount];
-            Array.Copy(_buffer, dataBuff, receivedDataAmount);
-            string text = Encoding.ASCII.GetString(dataBuff);
-            User newUser = new User();
-            newUser.SetSocket(socket);
-            _connectedUsers.Add(newUser);
-            Console.WriteLine("Text received: " + text);
+        //private static void ReceiveCallBack(IAsyncResult AR)
+        //{
+        //    Socket socket = (Socket)AR.AsyncState;
+        //    int receivedDataAmount = socket.EndReceive(AR);
+        //    byte[] dataBuff = new byte[receivedDataAmount];
+        //    Array.Copy(_buffer, dataBuff, receivedDataAmount);
+        //    string text = Encoding.ASCII.GetString(dataBuff);
+        //    User newUser = new User();
+        //    newUser.SetSocket(socket);
+        //    _connectedUsers.Add(newUser);
+        //    Console.WriteLine("Text received: " + text);
 
             
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
-        }
+        //    socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+        //}
 
 
     }
