@@ -77,5 +77,12 @@ namespace Secured_chat
                 return _socket.Connected;
             }
         }
+
+        public void Send_server (Byte[] data)
+        {
+            _socket.Send(data);
+
+        }
+
     }
 }

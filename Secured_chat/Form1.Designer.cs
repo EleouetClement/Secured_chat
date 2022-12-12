@@ -36,6 +36,8 @@ namespace Secured_chat
             this.portNumber = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.attempts = new System.Windows.Forms.Label();
+            this.pseudo = new System.Windows.Forms.Label();
+            this.pseudovalue = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -98,11 +100,30 @@ namespace Secured_chat
             this.attempts.TabIndex = 9;
             this.attempts.Text = "attempt";
             // 
+            // pseudo
+            // 
+            this.pseudo.AutoSize = true;
+            this.pseudo.Location = new System.Drawing.Point(64, 79);
+            this.pseudo.Name = "pseudo";
+            this.pseudo.Size = new System.Drawing.Size(73, 13);
+            this.pseudo.TabIndex = 10;
+            this.pseudo.Text = "pseudoName ";
+            this.pseudo.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // pseudovalue
+            // 
+            this.pseudovalue.Location = new System.Drawing.Point(143, 79);
+            this.pseudovalue.Name = "pseudovalue";
+            this.pseudovalue.Size = new System.Drawing.Size(100, 20);
+            this.pseudovalue.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(622, 282);
+            this.Controls.Add(this.pseudovalue);
+            this.Controls.Add(this.pseudo);
             this.Controls.Add(this.attempts);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.portNumber);
@@ -126,6 +147,8 @@ namespace Secured_chat
         private System.Windows.Forms.TextBox portNumber;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label attempts;
+        private System.Windows.Forms.Label pseudo;
+        private System.Windows.Forms.TextBox pseudovalue;
     }
 }
 

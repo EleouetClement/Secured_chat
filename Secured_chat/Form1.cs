@@ -55,7 +55,17 @@ namespace Secured_chat
             else
             {
                 this.attempts.Text = "Connecté au serveur";
+
             }
+
+
+            connexion.Send_server(Encoding.ASCII.GetBytes(pseudovalue.Text));
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
