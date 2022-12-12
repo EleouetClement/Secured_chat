@@ -25,6 +25,11 @@ namespace Encryption
             throw new NotImplementedException();
         }
 
+        public override void SetPublicKey(BigInteger e, BigInteger n)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override BigInteger Exposant(BigInteger e, BigInteger phi_n)
         {
             throw new NotImplementedException();

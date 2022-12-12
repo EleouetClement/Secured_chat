@@ -216,5 +216,7 @@ namespace Encryption
 			Console.WriteLine("Test de primalité : " + ((ok) ? "Ok" : "Ko"));
 			#endregion
 		}
+
+        
     }
 }

@@ -37,6 +37,13 @@ namespace Encryption
 			}
 		}
 
+
+        public virtual void SetPublicKey(T e, T n)
+        {
+            this.e = e;
+            this.n = n;
+        }
+
 		/// <summary>
 		/// Parse the key from a file
 		/// </summary>

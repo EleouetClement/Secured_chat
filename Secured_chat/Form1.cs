@@ -58,8 +58,8 @@ namespace Secured_chat
 
             }
 
-
-            connexion.Send_server(Encoding.ASCII.GetBytes(pseudovalue.Text));
+            string command = "user:Clement,684351, 89684321";
+            connexion.Send_server(Encoding.ASCII.GetBytes(command));
 
         }
 
