@@ -19,8 +19,8 @@ namespace Secured_chat
         static void Main()
         {
             _clientsocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
-       //     LoopConnect();
-            Console.ReadLine();
+            LoopConnect();
+            //Console.ReadLine();
 
 
             Application.EnableVisualStyles();
@@ -37,16 +37,16 @@ namespace Secured_chat
             while (!_clientsocket.Connected) {
                 try {
                     attempts++;
-                    _clientsocket.Connect(System.Net.IPAddress.Loopback, 100);
+                    _clientsocket.Connect(System.Net.IPAddress.Loopback, 5000);
                 } catch (SocketException)
                 {
 
               //      Console.Clear();
-                    Console.WriteLine("connexion.....: "+attempts.ToString());
+                    //Console.WriteLine("connexion.....: "+attempts.ToString());
                 }
             }
-            Console.Clear();
-            Console.WriteLine("connected !!!!!");
+      //      Console.Clear();
+            //Console.WriteLine("connected !!!!!");
             
         }
     }
