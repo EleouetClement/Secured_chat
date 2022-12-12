@@ -16,7 +16,7 @@ namespace Serveur
 
         private List<User> _connectedUsers;
 
-        private byte[] _buffer = new byte[];
+        private byte[] _buffer;
         private Socket _serverSocket;
 
 
@@ -65,7 +65,7 @@ namespace Serveur
         /// <param name="portNumber"></param>
         public void InitializeServer()
         {
-            Console.WriteLine("Setting up server");
+            Console.WriteLine("Initialisation du serveur");
             _serverSocket.Bind(new IPEndPoint(_address, _port));
         }
 
@@ -74,13 +74,14 @@ namespace Serveur
         /// </summary>
         public void StartListening()
         {
+            Console.WriteLine("En Attente de connexion...");
             _serverSocket.Listen(_backlog);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
         private void AcceptCallback(IAsyncResult AR)
         {
-            Console.WriteLine("New client connected....");
+            Console.WriteLine("Nouvelle connexion...");
             Socket socket = _serverSocket.EndAccept(AR);
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);

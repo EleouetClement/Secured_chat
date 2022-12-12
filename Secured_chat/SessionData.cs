@@ -8,7 +8,6 @@ namespace Secured_chat
 {
     internal class SessionData
     {
-        RSa
         static SessionData instance;
         public SessionData GetInstance()
         {
