@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace Serveur
     {
         private string _name;
         private RSASmallKey _publicKey;
-        private Socket _socket;
+        private IPAddress  _address;
 
         public User()
         { 
@@ -27,14 +28,14 @@ namespace Serveur
             _publicKey = publicKey;
         }
 
-        public Socket Socket
+        public IPAddress Socket
         {
-            get { return _socket; }
+            get { return _address; }
         }
 
         public void SetSocket(Socket socket)
         {
-            _socket = socket;
+            _address = socket.RemoteEndPoint
         }
 
         public string Name

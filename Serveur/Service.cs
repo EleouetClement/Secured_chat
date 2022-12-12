@@ -15,7 +15,8 @@ namespace Serveur
     {
 
         private List<User> _connectedUsers;
-        
+
+        private byte[] _buffer = new byte[];
         private Socket _serverSocket;
 
 
@@ -33,14 +34,14 @@ namespace Serveur
         /// The IP address the server needs to use. default address is IPAddress.Any 
         /// </summary>
         private IPAddress _address;
-        public Service(int backlog, int port = 5000)
+        public Service(int backlog, int port = 5000, int bufferSize=1024)
         {
-            SetUpServer(backlog, port);
+            SetUpServer(backlog, port, bufferSize);
             _address = IPAddress.Any;
         }
-        public Service(int backlog, IPAddress address, int port = 5000)
+        public Service(int backlog, IPAddress address, int port = 5000, int bufferSize = 1024)
         {
-            SetUpServer(backlog, port);
+            SetUpServer(backlog, port, bufferSize);
             _address = address;
         }
 
@@ -49,11 +50,12 @@ namespace Serveur
         /// </summary>
         /// <param name="backlog"></param>
         /// <param name="port"></param>
-        private void SetUpServer(int backlog, int port)
+        private void SetUpServer(int backlog, int port , int bufferSize)
         {
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _backlog = backlog;
             _port = port;
+            _buffer = new byte[bufferSize];
             _connectedUsers = new List<User>();
         }
 
@@ -79,9 +81,22 @@ namespace Serveur
         private void AcceptCallback(IAsyncResult AR)
         {
             Socket socket = _serverSocket.EndAccept(AR);
-            User newUser = new User();
-            _connectedUsers.Add();
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        }
+
+        private void ReceiveCallBack(IAsyncResult AR)
+        {
+            Socket socket = (Socket)AR.AsyncState;
+            int receivedDataAmount = socket.EndReceive(AR);
+            byte[] dataBuff = new byte[receivedDataAmount];
+            Array.Copy(_buffer, dataBuff, receivedDataAmount);
+            string text = Encoding.ASCII.GetString(dataBuff);
+            User newUser = new User();
+            newUser.SetSocket(socket);
+
+            _connectedUsers.Add();
+            Console.WriteLine("Text received: " + text);
         }
 
 

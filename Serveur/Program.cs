@@ -8,9 +8,15 @@ namespace Serveur
 {
     internal class Program
     {
+        /// <summary>
+        /// Serveur initialization and listening startup
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
-            
+            Service chatUserManager = new Service(5);
+            chatUserManager.InitializeServer();
+            chatUserManager.StartListening();
         }
     }
 }
