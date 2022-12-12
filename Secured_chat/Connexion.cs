@@ -20,6 +20,7 @@ namespace Secured_chat
         int maxAttempts = 5;
         static Connexion instance;
 
+
         public static Connexion GetInstance()
         {
             if(instance == null)
@@ -78,11 +79,22 @@ namespace Secured_chat
             }
         }
 
-        public void Send_server (Byte[] data)
+        public void Send_server (byte[] data)
         {
             _socket.Send(data);
 
         }
 
+        /// <summary>
+        /// Wait for the server to send data.
+        /// </summary>
+        public byte [] ReceiveFromServer()
+        {
+            byte[] received = new byte[1024];
+            int reception = _socket.Receive(received);
+            byte[] data = new byte[reception];
+            Array.Copy(received, data, reception);
+            return data;
+        }
     }
 }

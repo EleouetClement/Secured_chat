@@ -108,7 +108,6 @@ namespace Secured_chat
             this.pseudo.Size = new System.Drawing.Size(73, 13);
             this.pseudo.TabIndex = 10;
             this.pseudo.Text = "pseudoName ";
-            this.pseudo.Click += new System.EventHandler(this.label4_Click);
             // 
             // pseudovalue
             // 

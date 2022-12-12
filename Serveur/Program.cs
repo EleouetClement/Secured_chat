@@ -112,22 +112,42 @@ namespace Serveur
 
         private static void UpdateUserList(User us)
         {
+            lock (_connectedUsers)
+            {
+                _connectedUsers.Add(us);
+            }
+        }
 
+        private static string GetUserList()
+        {
+            string userList = string.Empty;
+            lock (_connectedUsers)
+            {
+                _connectedUsers.ForEach(u => userList += u.Name + ",");
+            }
+            return userList;
         }
 
         private static void CreateUser(string [] userInfo)
         {
             if(userInfo.Length != 3)
             {
-
+                //TO DO...
             }
             User newUser = new User(userInfo[0], GetPublicKey(userInfo));
             //Avoid multiple access on user List
-            lock(_connectedUsers)
-            {
-                _connectedUsers.Add(newUser);
-            }
+            UpdateUserList(newUser);
+            //Send back the list of all users
+            string userList = GetUserList();
+            byte[] data = Encoding.ASCII.GetBytes(userList);
+            _serverSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), null);
+        }
 
+
+        private static void SendCallBack(IAsyncResult AR)
+        {
+            Socket socket = (Socket)AR.AsyncState;
+            socket.EndSend(AR);
         }
 
         private static RSASmallKey GetPublicKey(string [] data)

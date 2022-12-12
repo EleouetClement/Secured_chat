@@ -34,11 +34,13 @@ namespace Secured_chat
             if(!IPAddress.TryParse(ip, out ipad))
             {
                 this.attempts.Text = "Mauvaise adresse ip";
+                return;
             }
             connexion.SetServerIp(ipad);
             if(!int.TryParse(this.portNumber.Text, out port))
             {
                 this.attempts.Text = "Mauvais numéro de port";
+                return;
             }
             connexion.SetServerPort(port);
 
@@ -60,12 +62,7 @@ namespace Secured_chat
 
             string command = "user:Clement,684351, 89684321";
             connexion.Send_server(Encoding.ASCII.GetBytes(command));
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
+            byte [] users = connexion.ReceiveFromServer();
         }
     }
 }
