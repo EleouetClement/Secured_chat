@@ -18,36 +18,20 @@ namespace Secured_chat
         [STAThread]
         static void Main()
         {
-            _clientsocket = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);
-            LoopConnect();
-            //Console.ReadLine();
-
-
+            InitializeConnection();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             
         }
 
-        private static void LoopConnect()
+        /// <summary>
+        /// Set up the network variables
+        /// </summary>
+        private static void InitializeConnection()
         {
-            int attempts = 0;
-
-
-            while (!_clientsocket.Connected) {
-                try {
-                    attempts++;
-                    _clientsocket.Connect(System.Net.IPAddress.Loopback, 5000);
-                } catch (SocketException)
-                {
-
-              //      Console.Clear();
-                    //Console.WriteLine("connexion.....: "+attempts.ToString());
-                }
-            }
-      //      Console.Clear();
-            //Console.WriteLine("connected !!!!!");
-            
+            Connexion c = Connexion.GetInstance();
+            c.CreateSocket();
         }
     }
 }
