@@ -28,14 +28,14 @@ namespace Serveur
             _publicKey = publicKey;
         }
 
-        public IPAddress Socket
+        public IPAddress Address
         {
             get { return _address; }
         }
 
         public void SetSocket(Socket socket)
         {
-            _address = socket.RemoteEndPoint
+            _address = ((IPEndPoint)socket.RemoteEndPoint).Address;
         }
 
         public string Name

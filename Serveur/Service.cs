@@ -80,6 +80,7 @@ namespace Serveur
 
         private void AcceptCallback(IAsyncResult AR)
         {
+            Console.WriteLine("New client connected....");
             Socket socket = _serverSocket.EndAccept(AR);
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -94,9 +95,11 @@ namespace Serveur
             string text = Encoding.ASCII.GetString(dataBuff);
             User newUser = new User();
             newUser.SetSocket(socket);
-
-            _connectedUsers.Add();
+            _connectedUsers.Add(newUser);
             Console.WriteLine("Text received: " + text);
+
+            
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
         }
 
 

@@ -17,6 +17,8 @@ namespace Serveur
             Service chatUserManager = new Service(5);
             chatUserManager.InitializeServer();
             chatUserManager.StartListening();
+            Console.WriteLine("Arret du service, Pressez une touche pour continuer...");
+            Console.ReadLine();
         }
     }
 }
