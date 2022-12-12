@@ -47,7 +47,17 @@ namespace Serveur
             _port = 5000;
             _buffer = new byte[1024];
             _connectedUsers = new List<User>();
-            _address = IPAddress.Loopback;
+            IPHostEntry host;
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach(IPAddress ip in host.AddressList)
+            {
+                if(ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    _address = ip;
+                    break;
+                }
+            }
+            Console.WriteLine("Serveur ecoute sur " + _address.ToString() + " : " + _port.ToString());
             _serverSocket.Bind(new IPEndPoint(_address, _port));
             _serverSocket.Listen(_backlog);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
