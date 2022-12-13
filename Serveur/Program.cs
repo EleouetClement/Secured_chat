@@ -93,7 +93,7 @@ namespace Serveur
             switch(command[0])
             {
                 case "user":
-                    CreateUser(arguments);
+                    CreateUser(arguments, socket);
                     break;
                 case "receiver":
 
@@ -128,7 +128,7 @@ namespace Serveur
             return userList;
         }
 
-        private static void CreateUser(string [] userInfo)
+        private static void CreateUser(string [] userInfo, Socket userSocket)
         {
             if(userInfo.Length != 3)
             {
@@ -140,7 +140,7 @@ namespace Serveur
             //Send back the list of all users
             string userList = GetUserList();
             byte[] data = Encoding.ASCII.GetBytes(userList);
-            _serverSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), null);
+            userSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
         }
 
 
