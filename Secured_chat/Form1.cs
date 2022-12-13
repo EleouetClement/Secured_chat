@@ -57,7 +57,6 @@ namespace Secured_chat
             else
             {
                 this.attempts.Text = "Connecté au serveur";
-
             }
 
             string command = "user:Clement,684351, 89684321";

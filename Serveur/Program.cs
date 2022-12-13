@@ -83,31 +83,40 @@ namespace Serveur
         /// <param name="AR"></param>
         private static void ReceiveCallBack(IAsyncResult AR)
         {
-            Socket socket = (Socket)AR.AsyncState;
-            int receivedDataAmount = socket.EndReceive(AR);
-            byte[] dataBuff = new byte[receivedDataAmount];
-            Array.Copy(_buffer, dataBuff, receivedDataAmount);
-            //string text = Encoding.ASCII.GetString(dataBuff);
-            string[] command = GetCommand(dataBuff);
-            string[] arguments = GetArguments(command[1]);
-            switch(command[0])
+            try
             {
-                case "user":
-                    CreateUser(arguments, socket);
-                    break;
-                case "receiver":
+                Socket socket = (Socket)AR.AsyncState;
+                int receivedDataAmount = socket.EndReceive(AR);
+                byte[] dataBuff = new byte[receivedDataAmount];
+                Array.Copy(_buffer, dataBuff, receivedDataAmount);
+                //string text = Encoding.ASCII.GetString(dataBuff);
+                string[] command = GetCommand(dataBuff);
+                string[] arguments = GetArguments(command[1]);
+                switch (command[0])
+                {
+                    case "user":
+                        CreateUser(arguments, socket);
+                        break;
+                    case "receiver":
 
-                    break;
+                        break;
 
-                default:
+                    default:
 
-                    break;
+                        break;
+                }
+                User newUser = new User();
+                newUser.SetSocket(socket);
+                _connectedUsers.Add(newUser);
+
+                socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             }
-            User newUser = new User();
-            newUser.SetSocket(socket);
-            _connectedUsers.Add(newUser);
-            
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+            catch(SocketException se)
+            {
+                //Unplanned connexion loss need to remove user from the _connected users list
+
+            }
+
         }
 
         private static void UpdateUserList(User us)
