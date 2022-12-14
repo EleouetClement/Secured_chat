@@ -114,7 +114,7 @@ namespace Serveur
                         CreateUser(arguments, socket);
                         break;
                     case "message":
-
+                        SendMessage(arguments, socket); 
                         break;
                     case "refreshList":
 
@@ -200,7 +200,28 @@ namespace Serveur
         /// <param name="userSocket">sender's socket</param>
         private static void SendMessage(string [] messageInfo, Socket userSocket)
         {
-
+            if(messageInfo.Length != 2)
+            {
+                //HANDLING TO DO...
+                throw new Exception("Wrong command format");
+            }
+            Socket receiverSocket = userSocket;
+            lock(_connectedUsers)
+            {
+                foreach(User u in _connectedUsers)
+                {
+                    if(u.Name.Equals(messageInfo[0]))
+                    {
+                        receiverSocket = u.Socket;
+                        break;
+                    }
+                }
+            }
+            if(receiverSocket.Equals(userSocket))
+            {//Receiver found
+                byte[] byteMessage = Encoding.ASCII.GetBytes(messageInfo[1]);
+                receiverSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+            }           
         }
 
         private static void SendCallBack(IAsyncResult AR)
