@@ -59,10 +59,18 @@ namespace Secured_chat
                 this.attempts.Text = "Connecté au serveur";
             }
 
-            string command = "user:Clement,684351, 89684321";
+            string command = "user:"+this.pseudovalue.Text+",684351, 89684321";
             connexion.Send_server(Encoding.ASCII.GetBytes(command));
             byte [] users = connexion.ReceiveFromServer();
             string result = Encoding.ASCII.GetString(users);
+            string[] userTab = result.Split(',');
+            UsersList connected = new UsersList();
+            foreach(string user in userTab)
+            {
+                connected.allConnectedUsers.Items.Add(user);
+            }
+            connected.ShowDialog();
+
         }
     }
 }

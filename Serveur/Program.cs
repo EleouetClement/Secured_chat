@@ -66,10 +66,10 @@ namespace Serveur
             RSASmallKey key = new RSASmallKey();
             key.SetPublicKey(5424, 6554);
             User us = new User("Jean", key);
-            us.SetTestIp(IPAddress.Any);
+            us.SetSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
             _connectedUsers.Add(us);
             User us1 = new User("toto", key);
-            us1.SetTestIp(IPAddress.Any);
+            us1.SetSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
             _connectedUsers.Add(us1);
 
         }
@@ -121,10 +121,6 @@ namespace Serveur
 
                         break;
                 }
-                User newUser = new User();
-                newUser.SetAddress(socket);
-                _connectedUsers.Add(newUser);
-
                 socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             }
             catch(SocketException se)
@@ -157,7 +153,7 @@ namespace Serveur
             {
                 foreach(User u in _connectedUsers)
                 {
-                    if(!u.Address.Equals(userIp))
+                    if(!u.Socket.Equals(userSocket))
                     {//Remove current user from the list
                         userList += u.Name + ",";
                     }
@@ -189,7 +185,7 @@ namespace Serveur
                 //TO DO...
             }
             User newUser = new User(userInfo[0], GetPublicKey(userInfo));
-            newUser.SetAddress(userSocket);
+            newUser.SetSocket(userSocket);
             //Avoid multiple access on user List
             UpdateUserList(newUser);
             //Send back the list of all users

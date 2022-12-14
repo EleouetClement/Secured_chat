@@ -17,7 +17,7 @@ namespace Serveur
         private string _name;
         private RSASmallKey _publicKey;
         private IPAddress  _address;
-
+        private Socket _clientSocket;
         public User()
         { 
         }
@@ -30,12 +30,20 @@ namespace Serveur
 
         public IPAddress Address
         {
-            get { return _address; }
+            get { return ((IPEndPoint)_clientSocket.RemoteEndPoint).Address; }
         }
 
-        public void SetAddress(Socket socket)
+        public Socket Socket
         {
-            _address = ((IPEndPoint)socket.RemoteEndPoint).Address;
+            get
+            {
+                return _clientSocket;
+            }
+        }
+
+        public void SetSocket(Socket socket)
+        {
+            _clientSocket = socket;
         }
 
         /// <summary>

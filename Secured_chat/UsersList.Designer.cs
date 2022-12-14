@@ -54,7 +54,7 @@ namespace Secured_chat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(788, 430);
+            this.ClientSize = new System.Drawing.Size(770, 406);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.allConnectedUsers);
             this.Name = "UsersList";
@@ -64,8 +64,7 @@ namespace Secured_chat
         }
 
         #endregion
-
-        private System.Windows.Forms.ListBox allConnectedUsers;
         private System.Windows.Forms.Button button1;
+        public System.Windows.Forms.ListBox allConnectedUsers;
     }
 }
