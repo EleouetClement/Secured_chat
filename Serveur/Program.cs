@@ -48,6 +48,7 @@ namespace Serveur
             _port = 5000;
             _buffer = new byte[1024];
             _connectedUsers = new List<User>();
+            SampleUsers();
             //_address = GetIPAddress();
             _address = IPAddress.Loopback;
             Console.WriteLine("Serveur ecoute sur " + _address.ToString() + " : " + _port.ToString());
@@ -57,6 +58,20 @@ namespace Serveur
             
             Console.WriteLine("Arret du service, Pressez une touche pour continuer...");
             Console.ReadLine();
+        }
+
+
+        private static void SampleUsers()
+        {
+            RSASmallKey key = new RSASmallKey();
+            key.SetPublicKey(5424, 6554);
+            User us = new User("Jean", key);
+            us.SetTestIp(IPAddress.Any);
+            _connectedUsers.Add(us);
+            User us1 = new User("toto", key);
+            us1.SetTestIp(IPAddress.Any);
+            _connectedUsers.Add(us1);
+
         }
 
         public static void StartListening()
@@ -100,13 +115,14 @@ namespace Serveur
                     case "receiver":
 
                         break;
+                    case "refreshList":
 
                     default:
 
                         break;
                 }
                 User newUser = new User();
-                newUser.SetSocket(socket);
+                newUser.SetAddress(socket);
                 _connectedUsers.Add(newUser);
 
                 socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
@@ -127,16 +143,45 @@ namespace Serveur
             }
         }
 
-        private static string GetUserList()
+        /// <summary>
+        /// Returns the list of the connected user as a string without the one asking for it.
+        /// </summary>
+        /// <param name="userSocket"></param>
+        /// <returns></returns>
+        private static string GetUserList(Socket userSocket)
         {
+            IPAddress userIp = ((IPEndPoint)userSocket.RemoteEndPoint).Address;
+
             string userList = string.Empty;
             lock (_connectedUsers)
             {
-                _connectedUsers.ForEach(u => userList += u.Name + ",");
+                foreach(User u in _connectedUsers)
+                {
+                    if(!u.Address.Equals(userIp))
+                    {//Remove current user from the list
+                        userList += u.Name + ",";
+                    }
+                }
             }
             return userList;
         }
 
+        /// <summary>
+        /// Send the list of the connectedUsers to the userSocket
+        /// </summary>
+        /// <param name="userSocket"></param>
+        private static void SendUsersList(Socket userSocket)
+        {
+            string userList = GetUserList(userSocket);
+            byte[] data = Encoding.ASCII.GetBytes(userList);
+            userSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+        }
+
+        /// <summary>
+        /// Add a user to the list of connected clients and send this list back.
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <param name="userSocket"></param>
         private static void CreateUser(string [] userInfo, Socket userSocket)
         {
             if(userInfo.Length != 3)
@@ -144,12 +189,11 @@ namespace Serveur
                 //TO DO...
             }
             User newUser = new User(userInfo[0], GetPublicKey(userInfo));
+            newUser.SetAddress(userSocket);
             //Avoid multiple access on user List
             UpdateUserList(newUser);
             //Send back the list of all users
-            string userList = GetUserList();
-            byte[] data = Encoding.ASCII.GetBytes(userList);
-            userSocket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+            SendUsersList(userSocket);
         }
 
 

@@ -33,9 +33,18 @@ namespace Serveur
             get { return _address; }
         }
 
-        public void SetSocket(Socket socket)
+        public void SetAddress(Socket socket)
         {
             _address = ((IPEndPoint)socket.RemoteEndPoint).Address;
+        }
+
+        /// <summary>
+        /// For test ONLY!
+        /// </summary>
+        /// <param name="address"></param>
+        public void SetTestIp(IPAddress address)
+        {
+            _address = address;
         }
 
         public string Name
