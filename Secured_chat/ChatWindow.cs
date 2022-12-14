@@ -10,21 +10,16 @@ using System.Windows.Forms;
 
 namespace Secured_chat
 {
-    public partial class UsersList : Form
+    public partial class ChatWindow : Form
     {
-        public UsersList()
+        public ChatWindow()
         {
             InitializeComponent();
         }
 
-
-
-        private void button1_Click(object sender, EventArgs e)
+        private void sendButton_Click(object sender, EventArgs e)
         {
-            ChatWindow chatBox = new ChatWindow();
-            chatBox.receiverName.Text = this.allConnectedUsers.SelectedItem.ToString();
-            chatBox.Show();
-            this.Close();
+            Connexion connexion = Connexion.GetInstance();
         }
     }
 }

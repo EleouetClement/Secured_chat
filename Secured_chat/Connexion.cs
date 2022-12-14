@@ -82,7 +82,6 @@ namespace Secured_chat
         public void Send_server (byte[] data)
         {
             _socket.Send(data);
-
         }
 
         /// <summary>

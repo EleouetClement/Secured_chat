@@ -42,6 +42,7 @@ namespace Serveur
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            //Initalisation du serveur
             Service chatUserManager = new Service(5);
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _backlog = 5;
@@ -112,7 +113,7 @@ namespace Serveur
                     case "user":
                         CreateUser(arguments, socket);
                         break;
-                    case "receiver":
+                    case "message":
 
                         break;
                     case "refreshList":
@@ -192,6 +193,15 @@ namespace Serveur
             SendUsersList(userSocket);
         }
 
+        /// <summary>
+        /// Send the given message to the receiver using its connection data 
+        /// </summary>
+        /// <param name="messageInfo">message and receiver's name</param>
+        /// <param name="userSocket">sender's socket</param>
+        private static void SendMessage(string [] messageInfo, Socket userSocket)
+        {
+
+        }
 
         private static void SendCallBack(IAsyncResult AR)
         {
