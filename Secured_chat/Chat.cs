@@ -73,7 +73,7 @@ namespace Secured_chat
         {
             if(_window != null)
             {
-                if(phrase != null)
+                if(phrase != string.Empty)
                 {
                     _window.Text = phrase;
                 }

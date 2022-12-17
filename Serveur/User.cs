@@ -17,6 +17,7 @@ namespace Serveur
         private string _name;
         private RSASmallKey _publicKey;
         private IPAddress  _address;
+        private int _messagePort;
         private int _listeningPort;
         private Socket _clientSocket;
         public User()
@@ -29,11 +30,12 @@ namespace Serveur
             _publicKey = publicKey;
         }
 
-        public IPAddress Address
+        public IPAddress IP
         {
-            get { return ((IPEndPoint)_clientSocket.RemoteEndPoint).Address; }
+            get { return _address; }
         }
 
+        [Obsolete]
         public Socket Socket
         {
             get
@@ -42,28 +44,52 @@ namespace Serveur
             }
         }
 
+        /// <summary>
+        /// Port used to send message to.
+        /// </summary>
+        public int MessagePort
+        {
+            get
+            {
+                return _messagePort;
+            }
+        }
+
+        /// <summary>
+        /// Port used to communicate requests to the server
+        /// </summary>
         public int ListeningPort
         {
             get { return _listeningPort; }
         }
+
 
         public void SetSocket(Socket socket)
         {
             _clientSocket = socket;
         }
 
-        public void SetPort(int port)
+        /// <summary>
+        /// Set the port on which messages will be send
+        /// </summary>
+        /// <param name="port"></param>
+        public void SetMessagePort(int port)
         {
-            _listeningPort = port;
+            _messagePort = port;
         }
 
         /// <summary>
-        /// For test ONLY!
+        /// Set ip and port used for connexion with the server
         /// </summary>
         /// <param name="address"></param>
-        public void SetTestIp(IPAddress address)
+        public void SetIp(IPAddress add)
         {
-            _address = address;
+            _address = add;
+        }
+
+        public void SetListeningPort(int port)
+        {
+            _listeningPort = port;
         }
 
         public string Name

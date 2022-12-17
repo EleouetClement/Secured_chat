@@ -52,12 +52,12 @@ namespace Serveur
             SampleUsers();
             //_address = GetIPAddress();
             _address = IPAddress.Loopback;
-            Console.WriteLine("Serveur ecoute sur " + _address.ToString() + " : " + _port.ToString());
+            Console.WriteLine("> Serveur ecoute sur " + _address.ToString() + " : " + _port.ToString());
             _serverSocket.Bind(new IPEndPoint(_address, _port));
             _serverSocket.Listen(_backlog);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
             
-            Console.WriteLine("Arret du service, Pressez une touche pour continuer...");
+            Console.WriteLine("> Arret du service, Pressez une touche pour continuer...");
             Console.ReadLine();
         }
 
@@ -67,24 +67,26 @@ namespace Serveur
             RSASmallKey key = new RSASmallKey();
             key.SetPublicKey(5424, 6554);
             User us = new User("Jean", key);
-            us.SetSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+            us.SetIp(IPAddress.Parse("192.168.1.1"));
+            us.SetListeningPort(8888);
             _connectedUsers.Add(us);
             User us1 = new User("toto", key);
-            us1.SetSocket(new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp));
+            us1.SetIp(IPAddress.Parse("192.168.1.2"));
+            us1.SetListeningPort(9999);
             _connectedUsers.Add(us1);
 
         }
 
         public static void StartListening()
         {
-            Console.WriteLine("En Attente de connexion...");
+            Console.WriteLine("> En Attente de connexion...");
             _serverSocket.Listen(_backlog);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
         }
 
         private static void AcceptCallback(IAsyncResult AR)
         {
-            Console.WriteLine("Nouvelle connexion...");
+            Console.WriteLine("> Nouvelle connexion...");
             Socket socket = _serverSocket.EndAccept(AR);
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
             _serverSocket.BeginAccept(new AsyncCallback(AcceptCallback), null);
@@ -158,7 +160,7 @@ namespace Serveur
             {
                 foreach(User u in _connectedUsers)
                 {
-                    if(!u.Socket.Equals(userSocket))
+                    if(!(u.IP.Equals(((IPEndPoint)userSocket.RemoteEndPoint).Address) && u.ListeningPort.Equals(((IPEndPoint)userSocket.RemoteEndPoint).Port)))
                     {//Remove current user from the list
                         userList += u.Name + ",";
                     }
@@ -190,8 +192,9 @@ namespace Serveur
                 //TO DO...
             }
             User newUser = new User(userInfo[0], GetPublicKey(userInfo));
-            newUser.SetSocket(userSocket);
-            newUser.SetPort(int.Parse(userInfo[3]));
+            newUser.SetIp(((IPEndPoint)userSocket.RemoteEndPoint).Address);
+            newUser.SetListeningPort(((IPEndPoint)userSocket.RemoteEndPoint).Port);
+            newUser.SetMessagePort(int.Parse(userInfo[3]));
             //Avoid multiple access on user List
             UpdateUserList(newUser);
             //Send back the list of all users
@@ -210,37 +213,43 @@ namespace Serveur
                 //HANDLING TO DO...
                 throw new Exception("Wrong command format");
             }
-            Socket receiverSocket = userSocket;
+            IPAddress receiverAddress = null;
             string senderName = string.Empty;
-            int receiverPort = 0;
+            int receiverMessagePort = 0;
             lock(_connectedUsers)
             {
                 foreach(User u in _connectedUsers)
                 {
                     if(u.Name.Equals(messageInfo[0]))
                     {
-                        receiverSocket = u.Socket;
-                        receiverPort = u.ListeningPort;
+                        receiverAddress = u.IP;
+                        receiverMessagePort = u.MessagePort;
                         break;
                     }
-                    if(u.Socket.Equals(userSocket))
+                    if(u.IP.Equals(((IPEndPoint)userSocket.RemoteEndPoint).Address) || u.ListeningPort.Equals(((IPEndPoint)userSocket.RemoteEndPoint).Port))
                     {
                         senderName = u.Name;
                     }
                 }
             }
-            if(receiverSocket.Equals(userSocket))
+            byte[] confirmation = Encoding.ASCII.GetBytes("ok");
+            if (receiverAddress != null)
             {//Receiver found
-                string message = senderName + "," + messageInfo[0];
-                byte [] confirmation = Encoding.ASCII.GetBytes("ok");
+                string message = senderName + "," + messageInfo[0];               
                 byte [] byteMessage = Encoding.ASCII.GetBytes(message);
                 //Setting temporary socket to send message to the client listening port
                 Socket receiverListeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                receiverListeningSocket.Connect(new IPEndPoint(IPAddress.Loopback, receiverPort));
-                receiverListeningSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendMessageCallBack), receiverListeningSocket);
+                receiverListeningSocket.Connect(new IPEndPoint(receiverAddress, receiverMessagePort));
+                receiverListeningSocket.Send(byteMessage, 0, byteMessage.Length, SocketFlags.None);
+                receiverListeningSocket.Close();
                 //Sends to the sender a confirmation
-                userSocket.BeginSend(confirmation, 0, confirmation.Length, SocketFlags.None, new AsyncCallback(SendCallBack), receiverSocket);
-            }           
+                userSocket.BeginSend(confirmation, 0, confirmation.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+            }
+            else
+            {
+                confirmation = Encoding.ASCII.GetBytes("ko");
+                userSocket.BeginSend(confirmation, 0, confirmation.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+            }
         }
 
         /// <summary>
@@ -319,7 +328,7 @@ namespace Serveur
         private static string [] GetCommand(byte [] data)
         {
             string text = Encoding.ASCII.GetString(data);
-            Console.WriteLine("commande reçu: " + text);
+            Console.WriteLine("> commande reçu: " + text);
             string[] command = text.Split(':');
             if (command.Length != 2)
             {

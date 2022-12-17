@@ -33,8 +33,7 @@ namespace Secured_chat
             Chat chatBox = new Chat(this.allConnectedUsers.SelectedItem.ToString(), key);
             ChatManager.GetInstance().AddChat(chatBox);
             chatBox.Show();
-            chatBox.SetBoxName();
-            
+            chatBox.SetBoxName();          
         }
 
         private void refreshList_Click(object sender, EventArgs e)

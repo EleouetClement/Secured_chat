@@ -116,12 +116,12 @@ namespace Secured_chat
         {
             Socket userSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             userSocket.Bind(new IPEndPoint(_ip, _port));
-            userSocket.Listen(_backlog);
-            userSocket.Accept();
+            userSocket.Listen(_backlog);         
             Chat chat = null;
             byte [] received = new byte[Connexion.GetInstance().BufferSize];
             while (true)
             {
+                userSocket.Accept();
                 int reception = userSocket.Receive(received);
                 byte[] data = new byte[reception];
                 Array.Copy(received, data, reception);
