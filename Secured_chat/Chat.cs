@@ -34,6 +34,11 @@ namespace Secured_chat
             get { return _receiver; }
         }
 
+        public RSASmallKey ReceiverKey
+        {
+            get { return _receiverKey; }
+        }
+
         /// <summary>
         /// Opens the chat Window
         /// </summary>

@@ -119,6 +119,9 @@ namespace Serveur
                     case "refreshList":
                         SendUsersList(socket);
                         break;
+                    case "userInfo":
+
+                        break;
                     default:
 
                         break;

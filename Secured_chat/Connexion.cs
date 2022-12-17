@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Encryption;
 
 namespace Secured_chat
 {
@@ -21,6 +22,16 @@ namespace Secured_chat
         int maxAttempts = 5;
         static Connexion instance;
 
+        public enum RequestType
+        {
+            userInfo,
+            usersList,
+            userConnexion,
+            message
+        }
+        private Connexion()
+        {
+        }
 
         public static Connexion GetInstance()
         {
@@ -81,24 +92,76 @@ namespace Secured_chat
         }
 
         /// <summary>
-        /// Send data to the server using the current connexion
+        /// Send data to the server using the current connexion and waits for the server response
         /// </summary>
         /// <param name="data"></param>
-        public void SendServer (byte[] data)
+        private string SendServer (byte[] data)
         {
             _socket.Send(data);
+            return ReceiveFromServer();
         }
 
         /// <summary>
         /// Wait for the server to send data.
         /// </summary>
-        public string ReceiveFromServer()
+        private string ReceiveFromServer()
         {
             byte[] received = new byte[1024];
             int reception = _socket.Receive(received);
             byte[] data = new byte[reception];
             Array.Copy(received, data, reception);
             return Encoding.ASCII.GetString(data);
+        }
+
+
+        /// <summary>
+        /// Send user informations to the server. the public key is retrieved dynamicaly
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public string [] SendUserData(string userName)
+        {
+            Tuple<int, int> pubKey;
+            string result = string.Empty;
+            try
+            {
+                pubKey = ChatManager.GetInstance().UserKey.PublicKey;
+            }catch(NullReferenceException e)
+            {
+                throw e;
+            }
+            string[] args = new string[] { userName, pubKey.Item1.ToString(), pubKey.Item2.ToString() };
+
+            try
+            {
+                result = SendRequest(RequestType.userConnexion, args);
+            }catch(Exception e)
+            {
+                throw new Exception("Erreur lors de l'envoi des informations au server : " + e.Message);
+            }
+            return result.Split(',');
+        }
+
+        /// <summary>
+        /// Returns receiver's public key. Throw new Exception in case the request did not ends correctly
+        /// </summary>
+        /// <param name="receiverName"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public RSASmallKey GetReceiverKey(string receiverName)
+        {
+            RSASmallKey receiverKey = null;
+            string result = string.Empty;
+            try
+            {
+                result = SendRequest(RequestType.userInfo, new string[] { receiverName });
+            }catch(Exception e)
+            {
+                throw new Exception("Impossible de récupérer les informations de " + receiverName + " depuis le serveur : " + e.Message);
+            }
+            string[] key = result.Split(',');
+            receiverKey.SetPublicKey(int.Parse(key[0]), int.Parse(key[1]));
+            return receiverKey;
         }
 
         /// <summary>
@@ -108,10 +171,61 @@ namespace Secured_chat
         /// <param name="message"></param>
         public void SendMessage(string receiver, Message message)
         {
-            string command = "message:" + receiver + "," + message.Data;
+            string [] args  = { receiver, message.Data };
+            if(SendRequest(RequestType.message, args) != "ok")
+            {
+                throw new Exception("Une erreur est survenue, message non distribué");
+            }
             //string command = "message:" + receiver + "," + message.Encrypted;
-            byte [] data = Encoding.ASCII.GetBytes(command);
-            SendServer(data);
         }
+
+        /// <summary>
+        /// Request for the connected users list
+        /// </summary>
+        public string [] RefreshUserList()
+        {
+            string response = SendRequest(RequestType.usersList, new string[] { string.Empty });
+            return response.Split(',');
+        }
+
+        /// <summary>
+        /// Sends a specific request to the server
+        /// </summary>
+        /// <param name="rt"></param>
+        /// <param name="argmuents"></param>
+        private string SendRequest(RequestType rt, string[] argmuents)
+        {
+
+            string command = string.Empty;
+            switch(rt)
+            {
+                case RequestType.userInfo:
+                    command = "userInfo:";
+                    break;
+                case RequestType.usersList:
+                    command = "refreshList:";
+                    break;
+                case RequestType.userConnexion:
+                    command = "user:";
+                    break;
+                case RequestType.message:
+                    command = "user:";
+                    break;
+                default:
+                    break;
+            }
+            command += argmuents[0];
+            if (argmuents.Length > 1)
+            {               
+                for(int i= 1; i < argmuents.Length; i++)
+                {
+                    command += "," + argmuents[i];
+                }
+            }
+            byte[] data = Encoding.ASCII.GetBytes(command);
+            return SendServer(data);
+        }
+
+        
     }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Encryption;
 
 namespace Secured_chat
 {
@@ -21,7 +22,15 @@ namespace Secured_chat
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Chat chatBox = new Chat(this.allConnectedUsers.SelectedItem.ToString());
+            RSASmallKey key = null;
+            try
+            {
+                key = Connexion.GetInstance().GetReceiverKey(this.allConnectedUsers.SelectedItem.ToString());
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            Chat chatBox = new Chat(this.allConnectedUsers.SelectedItem.ToString(), key);
             ChatManager.GetInstance().AddChat(chatBox);
             chatBox.Show();
             this.Close();

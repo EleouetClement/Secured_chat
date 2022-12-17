@@ -58,10 +58,7 @@ namespace Secured_chat
             {
                 this.attempts.Text = "Connecté au serveur";
             }
-            string command = "user:"+this.pseudovalue.Text+",684351, 89684321";
-            connexion.SendServer(Encoding.ASCII.GetBytes(command));
-            string users = connexion.ReceiveFromServer();
-            string[] userTab = users.Split(',');
+            string[] userTab = connexion.SendUserData(this.pseudovalue.Text);
             UsersList connected = new UsersList();
             foreach(string user in userTab)
             {

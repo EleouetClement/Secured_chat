@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Encryption;
 
 namespace Secured_chat
 {
@@ -10,12 +11,14 @@ namespace Secured_chat
     {
         Dictionary<string, Chat> _chats;
 
+        RSASmallKey _userKey;
+
+
+        public static ChatManager Instance;
         private ChatManager()
         {
             _chats = new Dictionary<string, Chat>();
         }
-
-        public static ChatManager Instance;
 
         public static ChatManager GetInstance()
         {
@@ -26,6 +29,16 @@ namespace Secured_chat
             return Instance;
         }
 
+        public RSASmallKey UserKey
+        {
+            get { return _userKey; }
+        }
+
+        public void SetKey(RSASmallKey key)
+        {
+            _userKey = key;
+        }
+
         /// <summary>
         /// Add the chat in the manager's dictionnary
         /// </summary>
@@ -34,5 +47,7 @@ namespace Secured_chat
         {
             _chats.Add(chat.Receiver, chat);
         }
+
+
     }
 }
