@@ -210,6 +210,7 @@ namespace Serveur
                 throw new Exception("Wrong command format");
             }
             Socket receiverSocket = userSocket;
+            string senderName = string.Empty;
             lock(_connectedUsers)
             {
                 foreach(User u in _connectedUsers)
@@ -219,11 +220,16 @@ namespace Serveur
                         receiverSocket = u.Socket;
                         break;
                     }
+                    if(u.Socket.Equals(userSocket))
+                    {
+                        senderName = u.Name;
+                    }
                 }
             }
             if(receiverSocket.Equals(userSocket))
             {//Receiver found
-                byte[] byteMessage = Encoding.ASCII.GetBytes(messageInfo[1]);
+                string message = senderName + "," + messageInfo[0];
+                byte[] byteMessage = Encoding.ASCII.GetBytes(message);
                 receiverSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
             }           
         }

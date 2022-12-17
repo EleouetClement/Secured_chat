@@ -14,6 +14,11 @@ namespace Secured_chat
         List<Message> _messages;
         ChatWindow _window;
 
+        public Chat(string receiver)
+        {
+            _receiver = receiver;
+        }
+
         public Chat(string receiver, RSASmallKey receiverKey)
         {
             _receiver = receiver;

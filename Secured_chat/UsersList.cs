@@ -35,5 +35,11 @@ namespace Secured_chat
             chatBox.Show();
             this.Close();
         }
+
+        private void refreshList_Click(object sender, EventArgs e)
+        {
+            this.allConnectedUsers.Items.Clear();
+            this.allConnectedUsers.Items.AddRange(Connexion.GetInstance().RefreshUserList());
+        }
     }
 }

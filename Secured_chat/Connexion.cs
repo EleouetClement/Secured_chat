@@ -19,7 +19,8 @@ namespace Secured_chat
         Socket _socket;
         IPAddress _serverAddress;
         int _portNumber;
-        int maxAttempts = 5;
+        int _maxAttempts = 5;
+        int _bufferSize = 1024;
         static Connexion instance;
 
         public enum RequestType
@@ -40,6 +41,11 @@ namespace Secured_chat
                 instance = new Connexion();
             }
             return instance;
+        }
+
+        public Socket Socket
+        {
+            get { return _socket; }
         }
 
         public void CreateSocket()
@@ -69,8 +75,13 @@ namespace Secured_chat
         {
             get
             {
-                return maxAttempts;
+                return _maxAttempts;
             }
+        }
+
+        public int BufferSize
+        {
+            get { return _bufferSize; }
         }
 
         public void SetServerIp(IPAddress address)
@@ -106,7 +117,7 @@ namespace Secured_chat
         /// </summary>
         private string ReceiveFromServer()
         {
-            byte[] received = new byte[1024];
+            byte[] received = new byte[_bufferSize];
             int reception = _socket.Receive(received);
             byte[] data = new byte[reception];
             Array.Copy(received, data, reception);

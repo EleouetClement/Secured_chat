@@ -20,7 +20,7 @@ namespace Secured_chat
         }
 
         /// <summary>
-        /// Initiate connexion to the server
+        /// Initiate connexion to the server and start listening for Messages
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -65,7 +65,15 @@ namespace Secured_chat
                 connected.allConnectedUsers.Items.Add(user);
             }
             connected.ShowDialog();
-
+            //Start Listening process
+            try
+            {               
+                ChatManager.GetInstance().StartListening();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
