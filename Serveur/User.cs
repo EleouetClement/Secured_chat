@@ -17,6 +17,7 @@ namespace Serveur
         private string _name;
         private RSASmallKey _publicKey;
         private IPAddress  _address;
+        private int _listeningPort;
         private Socket _clientSocket;
         public User()
         { 
@@ -41,9 +42,19 @@ namespace Serveur
             }
         }
 
+        public int ListeningPort
+        {
+            get { return _listeningPort; }
+        }
+
         public void SetSocket(Socket socket)
         {
             _clientSocket = socket;
+        }
+
+        public void SetPort(int port)
+        {
+            _listeningPort = port;
         }
 
         /// <summary>

@@ -185,12 +185,13 @@ namespace Serveur
         /// <param name="userSocket"></param>
         private static void CreateUser(string [] userInfo, Socket userSocket)
         {
-            if(userInfo.Length != 3)
+            if(userInfo.Length != 4)
             {
                 //TO DO...
             }
             User newUser = new User(userInfo[0], GetPublicKey(userInfo));
             newUser.SetSocket(userSocket);
+            newUser.SetPort(int.Parse(userInfo[3]));
             //Avoid multiple access on user List
             UpdateUserList(newUser);
             //Send back the list of all users
@@ -211,6 +212,7 @@ namespace Serveur
             }
             Socket receiverSocket = userSocket;
             string senderName = string.Empty;
+            int receiverPort = 0;
             lock(_connectedUsers)
             {
                 foreach(User u in _connectedUsers)
@@ -218,6 +220,7 @@ namespace Serveur
                     if(u.Name.Equals(messageInfo[0]))
                     {
                         receiverSocket = u.Socket;
+                        receiverPort = u.ListeningPort;
                         break;
                     }
                     if(u.Socket.Equals(userSocket))
@@ -229,8 +232,14 @@ namespace Serveur
             if(receiverSocket.Equals(userSocket))
             {//Receiver found
                 string message = senderName + "," + messageInfo[0];
-                byte[] byteMessage = Encoding.ASCII.GetBytes(message);
-                receiverSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
+                byte [] confirmation = Encoding.ASCII.GetBytes("ok");
+                byte [] byteMessage = Encoding.ASCII.GetBytes(message);
+                //Setting temporary socket to send message to the client listening port
+                Socket receiverListeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                receiverListeningSocket.Connect(new IPEndPoint(IPAddress.Loopback, receiverPort));
+                receiverListeningSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendMessageCallBack), receiverListeningSocket);
+                //Sends to the sender a confirmation
+                userSocket.BeginSend(confirmation, 0, confirmation.Length, SocketFlags.None, new AsyncCallback(SendCallBack), receiverSocket);
             }           
         }
 
@@ -275,6 +284,14 @@ namespace Serveur
         {
             Socket socket = (Socket)AR.AsyncState;
             socket.EndSend(AR);
+        }
+
+        private static void SendMessageCallBack(IAsyncResult AR)
+        {
+            //Ends temporary connection after sending a message to a client listening port
+            Socket socket = (Socket)AR.AsyncState;
+            socket.EndSend(AR);
+            socket.Disconnect(false);
         }
 
         private static RSASmallKey GetPublicKey(string [] data)

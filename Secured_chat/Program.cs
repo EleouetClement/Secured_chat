@@ -38,6 +38,7 @@ namespace Secured_chat
         private static void InitializeChatManager()
         {
             ChatManager chatManager = ChatManager.GetInstance();
+            chatManager.SetNetwotkInfo();
         }
     }
 }

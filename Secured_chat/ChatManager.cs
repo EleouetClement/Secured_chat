@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -16,6 +17,9 @@ namespace Secured_chat
     {
         Dictionary<string, Chat> _chats;
 
+        int _port;
+        int _backlog;
+        IPAddress _ip;
         RSASmallKey _userKey;
 
         private Thread _thread;
@@ -24,7 +28,7 @@ namespace Secured_chat
         static ChatManager Instance;
         private ChatManager()
         {
-            _chats = new Dictionary<string, Chat>();
+            _chats = new Dictionary<string, Chat>();            
         }
 
         public static ChatManager GetInstance()
@@ -34,6 +38,35 @@ namespace Secured_chat
                 Instance = new ChatManager();
             }
             return Instance;
+        }
+
+        /// <summary>
+        /// Sets the listening socket informations
+        /// </summary>
+        /// <param name="port"></param>
+        /// <param name="ip"></param>
+        public void SetNetwotkInfo(int port = 25555, IPAddress ip = null, int backlog=2)
+        {
+            _port = port;
+            _backlog = backlog;
+            if (ip != null)
+            {
+                _ip = ip;
+            }
+            else
+            {
+                _ip = IPAddress.Loopback;
+            }
+        }
+
+        public int Port
+        {
+            get { return _port; }
+        }
+
+        public IPAddress IP
+        {
+            get { return _ip; }
         }
 
         public RSASmallKey UserKey
@@ -81,7 +114,10 @@ namespace Secured_chat
         /// </summary>
         private void ListenForMessages()
         {
-            Socket userSocket = Connexion.GetInstance().Socket;
+            Socket userSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            userSocket.Bind(new IPEndPoint(_ip, _port));
+            userSocket.Listen(_backlog);
+            userSocket.Accept();
             Chat chat = null;
             byte [] received = new byte[Connexion.GetInstance().BufferSize];
             while (true)

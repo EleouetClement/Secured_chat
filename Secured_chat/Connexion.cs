@@ -142,8 +142,8 @@ namespace Secured_chat
             {
                 throw e;
             }
-            string[] args = new string[] { userName, pubKey.Item1.ToString(), pubKey.Item2.ToString() };
-
+            ChatManager cm = ChatManager.GetInstance();
+            string[] args = new string[] { userName, pubKey.Item1.ToString(), pubKey.Item2.ToString(), cm.Port.ToString()};
             try
             {
                 result = SendRequest(RequestType.userConnexion, args);
@@ -221,7 +221,7 @@ namespace Secured_chat
                     command = "user:";
                     break;
                 case RequestType.message:
-                    command = "user:";
+                    command = "message:";
                     break;
                 default:
                     break;
