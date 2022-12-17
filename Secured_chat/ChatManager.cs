@@ -140,6 +140,7 @@ namespace Secured_chat
                         chat.AddMessage(newMessage);
                         _chats.Add(messageInfo[0], chat);
                         chat.Show();
+                        chat.SetBoxName();
                     }
                 }
             }

@@ -38,12 +38,14 @@ namespace Secured_chat
             this.attempts = new System.Windows.Forms.Label();
             this.pseudo = new System.Windows.Forms.Label();
             this.pseudovalue = new System.Windows.Forms.TextBox();
+            this.listeningPort = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 25);
+            this.label1.Location = new System.Drawing.Point(41, 25);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 13);
             this.label1.TabIndex = 0;
@@ -51,14 +53,14 @@ namespace Secured_chat
             // 
             // ipAddress
             // 
-            this.ipAddress.Location = new System.Drawing.Point(143, 18);
+            this.ipAddress.Location = new System.Drawing.Point(156, 18);
             this.ipAddress.Name = "ipAddress";
             this.ipAddress.Size = new System.Drawing.Size(163, 20);
             this.ipAddress.TabIndex = 1;
             // 
             // Connexion
             // 
-            this.Connexion.Location = new System.Drawing.Point(143, 123);
+            this.Connexion.Location = new System.Drawing.Point(143, 141);
             this.Connexion.Name = "Connexion";
             this.Connexion.Size = new System.Drawing.Size(121, 21);
             this.Connexion.TabIndex = 5;
@@ -69,15 +71,15 @@ namespace Secured_chat
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(102, 54);
+            this.label2.Location = new System.Drawing.Point(62, 51);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.Size = new System.Drawing.Size(88, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Port : ";
+            this.label2.Text = "Port du serveur : ";
             // 
             // portNumber
             // 
-            this.portNumber.Location = new System.Drawing.Point(143, 47);
+            this.portNumber.Location = new System.Drawing.Point(156, 48);
             this.portNumber.Name = "portNumber";
             this.portNumber.Size = new System.Drawing.Size(78, 20);
             this.portNumber.TabIndex = 7;
@@ -103,24 +105,42 @@ namespace Secured_chat
             // pseudo
             // 
             this.pseudo.AutoSize = true;
-            this.pseudo.Location = new System.Drawing.Point(64, 79);
+            this.pseudo.Location = new System.Drawing.Point(73, 82);
             this.pseudo.Name = "pseudo";
-            this.pseudo.Size = new System.Drawing.Size(73, 13);
+            this.pseudo.Size = new System.Drawing.Size(77, 13);
             this.pseudo.TabIndex = 10;
-            this.pseudo.Text = "pseudoName ";
+            this.pseudo.Text = "Pseudonyme : ";
             // 
             // pseudovalue
             // 
-            this.pseudovalue.Location = new System.Drawing.Point(143, 79);
+            this.pseudovalue.Location = new System.Drawing.Point(156, 79);
             this.pseudovalue.Name = "pseudovalue";
             this.pseudovalue.Size = new System.Drawing.Size(100, 20);
             this.pseudovalue.TabIndex = 11;
+            // 
+            // listeningPort
+            // 
+            this.listeningPort.Location = new System.Drawing.Point(156, 105);
+            this.listeningPort.Name = "listeningPort";
+            this.listeningPort.Size = new System.Drawing.Size(100, 20);
+            this.listeningPort.TabIndex = 12;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1, 110);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(149, 13);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "Port d\'ecoute des messages : ";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(622, 282);
+            this.ClientSize = new System.Drawing.Size(698, 336);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.listeningPort);
             this.Controls.Add(this.pseudovalue);
             this.Controls.Add(this.pseudo);
             this.Controls.Add(this.attempts);
@@ -148,6 +168,8 @@ namespace Secured_chat
         private System.Windows.Forms.Label attempts;
         private System.Windows.Forms.Label pseudo;
         private System.Windows.Forms.TextBox pseudovalue;
+        private System.Windows.Forms.TextBox listeningPort;
+        private System.Windows.Forms.Label label4;
     }
 }
 

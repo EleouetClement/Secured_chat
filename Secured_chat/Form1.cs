@@ -39,7 +39,7 @@ namespace Secured_chat
             connexion.SetServerIp(ipad);
             if(!int.TryParse(this.portNumber.Text, out port))
             {
-                this.attempts.Text = "Mauvais numéro de port";
+                this.attempts.Text = "Mauvais numéro de port serveur";
                 return;
             }
             connexion.SetServerPort(port);
@@ -58,22 +58,32 @@ namespace Secured_chat
             {
                 this.attempts.Text = "Connecté au serveur";
             }
+            int listening = 0;
+            if (!int.TryParse(this.listeningPort.Text, out listening))
+            {
+                this.attempts.Text = "Mauvais numéro de port d'ecoute de message";
+                return;
+            }
+            ChatManager cm = ChatManager.GetInstance();
+            cm.SetNetwotkInfo(port = listening);
             string[] userTab = connexion.SendUserData(this.pseudovalue.Text);
             UsersList connected = new UsersList();
             foreach(string user in userTab)
             {
                 connected.allConnectedUsers.Items.Add(user);
             }
-            connected.ShowDialog();
+            connected.Text = this.pseudovalue.Text;
+            connected.Show();
             //Start Listening process
             try
-            {               
-                ChatManager.GetInstance().StartListening();
+            {                
+                cm.StartListening();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+            this.Hide();//Hiding connection interface
         }
     }
 }

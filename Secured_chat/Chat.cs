@@ -68,5 +68,20 @@ namespace Secured_chat
         {
             _messages.Add(message);
         }
+
+        public void SetBoxName(string phrase="")
+        {
+            if(_window != null)
+            {
+                if(phrase != null)
+                {
+                    _window.Text = phrase;
+                }
+                else
+                {
+                    _window.Text = "Discussion avec : " + _receiver;
+                }
+            }
+        }
     }
 }
