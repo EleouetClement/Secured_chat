@@ -120,7 +120,7 @@ namespace Serveur
                         SendUsersList(socket);
                         break;
                     case "userInfo":
-
+                        SendUserInfo(arguments, socket);
                         break;
                     default:
 
@@ -226,6 +226,43 @@ namespace Serveur
                 byte[] byteMessage = Encoding.ASCII.GetBytes(messageInfo[1]);
                 receiverSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
             }           
+        }
+
+        /// <summary>
+        /// Sends the public key of the given userName, sends "ko" if no user found
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="userSocket"></param>
+        private static void SendUserInfo(string [] userName, Socket userSocket)
+        {
+            if(userName.Length != 1)
+            {
+                //TO DO
+            }
+            RSASmallKey userKey = null;
+            lock(_connectedUsers)
+            {
+                foreach (User u in _connectedUsers)
+                {
+                    if (u.Name.Equals(userName[0]))
+                    {
+                        userKey = u.PublicKey;
+                        break;
+                    }
+                }
+            }
+            string command = string.Empty;
+            if (userKey != null)
+            {
+                Tuple<int, int> pubkey = userKey.PublicKey;
+                command = pubkey.Item1.ToString() + "," + pubkey.Item2.ToString();
+            }
+            else
+            {
+                command = "ko";
+            }
+            byte[] byteMessage = Encoding.ASCII.GetBytes(command);
+            userSocket.BeginSend(byteMessage, 0, byteMessage.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
         }
 
         private static void SendCallBack(IAsyncResult AR)
