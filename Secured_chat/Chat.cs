@@ -21,6 +21,9 @@ namespace Secured_chat
             _messages = new List<Message>();
         }
 
+        /// <summary>
+        /// True if the form is created
+        /// </summary>
         public bool WindowOn
         {
             get
@@ -44,13 +47,13 @@ namespace Secured_chat
         /// </summary>
         public void Show()
         {
-            if(WindowOn)
+            if(!WindowOn)
             {
-                if(_window.IsDisposed)
-                {
-                    _window.Show();
-                }
+                _window = new ChatWindow(_receiverKey);
+                _window.receiverName.Text = Receiver;
             }
+            _window.Show();
+
         }
         /// <summary>
         /// Add a message to the list in this discussion

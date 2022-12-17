@@ -125,7 +125,8 @@ namespace Secured_chat
             string result = string.Empty;
             try
             {
-                pubKey = ChatManager.GetInstance().UserKey.PublicKey;
+                //pubKey = ChatManager.GetInstance().UserKey.PublicKey;
+                pubKey = new Tuple<int, int>(26843, 984321);//TO CHANGE
             }catch(NullReferenceException e)
             {
                 throw e;
@@ -150,7 +151,7 @@ namespace Secured_chat
         /// <exception cref="Exception"></exception>
         public RSASmallKey GetReceiverKey(string receiverName)
         {
-            RSASmallKey receiverKey = null;
+            RSASmallKey receiverKey = new RSASmallKey();
             string result = string.Empty;
             try
             {

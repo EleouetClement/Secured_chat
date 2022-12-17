@@ -50,6 +50,7 @@ namespace Secured_chat
             // 
             this.Dialogbox.Location = new System.Drawing.Point(12, 57);
             this.Dialogbox.Name = "Dialogbox";
+            this.Dialogbox.ReadOnly = true;
             this.Dialogbox.Size = new System.Drawing.Size(327, 530);
             this.Dialogbox.TabIndex = 1;
             this.Dialogbox.Text = "";
