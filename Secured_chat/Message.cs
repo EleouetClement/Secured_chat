@@ -10,29 +10,48 @@ using Secured_chat;
 using System;
 using Encryption;
 
-namespace opsie_chat_project
+namespace Secured_chat
 {
 	/// <summary>
 	/// Description of Message.
 	/// </summary>
 	public class Message : IEnpcryptable<int>
 	{
-		string data;
-		string encrypted;
+		string _data;
+		string _encrypted;
 		public Message(string data)
 		{
-			this.data = data;
+			this._data = data;
+			_encrypted = string.Empty;
 		}
 
-
+		/// <summary>
+		/// TO DO...
+		/// </summary>
+		/// <param name="key"></param>
+		/// <exception cref="NotImplementedException"></exception>
         public void Decrypt(RSAKey<int> key)
         {
             throw new NotImplementedException();
         }
 
+		/// <summary>
+		/// TO DO...
+		/// </summary>
+		/// <param name="key"></param>
         public void Encrypt(RSAKey<int> key)
         {
-            throw new NotImplementedException();
+            
+        }
+
+		public string Data
+        {
+			get { return _data; }
+        }
+
+		public string Encrypted
+        {
+			get { return _encrypted; }
         }
     }
 }

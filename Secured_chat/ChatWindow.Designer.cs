@@ -111,10 +111,10 @@ namespace Secured_chat
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RichTextBox Dialogbox;
         private System.Windows.Forms.RichTextBox messageBox;
         private System.Windows.Forms.Button sendButton;
         public System.Windows.Forms.Label receiverName;
         private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.RichTextBox Dialogbox;
     }
 }

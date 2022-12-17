@@ -19,6 +19,7 @@ namespace Secured_chat
         static void Main()
         {
             InitializeConnection();
+            InitializeChatManager();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
@@ -32,6 +33,11 @@ namespace Secured_chat
         {
             Connexion c = Connexion.GetInstance();
             c.CreateSocket();
+        }
+
+        private static void InitializeChatManager()
+        {
+            ChatManager chatManager = ChatManager.GetInstance();
         }
     }
 }

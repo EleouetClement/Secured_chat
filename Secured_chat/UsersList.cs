@@ -21,8 +21,8 @@ namespace Secured_chat
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ChatWindow chatBox = new ChatWindow();
-            chatBox.receiverName.Text = this.allConnectedUsers.SelectedItem.ToString();
+            Chat chatBox = new Chat(this.allConnectedUsers.SelectedItem.ToString());
+            ChatManager.GetInstance().AddChat(chatBox);
             chatBox.Show();
             this.Close();
         }

@@ -11,6 +11,7 @@ namespace Secured_chat
 
     /// <summary>
     /// Set of tools to manage network connection with the server and other users
+    /// Careful, it is a singleton !
     /// </summary>
     class Connexion
     {
@@ -79,7 +80,11 @@ namespace Secured_chat
             }
         }
 
-        public void Send_server (byte[] data)
+        /// <summary>
+        /// Send data to the server using the current connexion
+        /// </summary>
+        /// <param name="data"></param>
+        public void SendServer (byte[] data)
         {
             _socket.Send(data);
         }
@@ -87,13 +92,26 @@ namespace Secured_chat
         /// <summary>
         /// Wait for the server to send data.
         /// </summary>
-        public byte [] ReceiveFromServer()
+        public string ReceiveFromServer()
         {
             byte[] received = new byte[1024];
             int reception = _socket.Receive(received);
             byte[] data = new byte[reception];
             Array.Copy(received, data, reception);
-            return data;
+            return Encoding.ASCII.GetString(data);
+        }
+
+        /// <summary>
+        /// Send message to the server
+        /// </summary>
+        /// <param name="receiver"></param>
+        /// <param name="message"></param>
+        public void SendMessage(string receiver, Message message)
+        {
+            string command = "message:" + receiver + "," + message.Data;
+            //string command = "message:" + receiver + "," + message.Encrypted;
+            byte [] data = Encoding.ASCII.GetBytes(command);
+            SendServer(data);
         }
     }
 }

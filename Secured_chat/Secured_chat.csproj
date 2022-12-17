@@ -47,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chat.cs" />
+    <Compile Include="ChatManager.cs" />
     <Compile Include="ChatWindow.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -117,7 +117,8 @@ namespace Serveur
                         SendMessage(arguments, socket); 
                         break;
                     case "refreshList":
-
+                        SendUsersList(socket);
+                        break;
                     default:
 
                         break;
