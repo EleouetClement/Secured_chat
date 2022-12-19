@@ -26,14 +26,14 @@ namespace Encryption
         /// <param name="data"></param>
         public override void Load(string [] data)
         {
-			e = d = n = 0;
+			_e = _d = _n = 0;
             try
             {
 				using (StreamReader rd = new StreamReader(keyFile))
 				{
-					d = int.Parse(rd.ReadLine());
-					e = int.Parse(rd.ReadLine());
-					n = int.Parse(rd.ReadLine());
+					_d = int.Parse(rd.ReadLine());
+					_e = int.Parse(rd.ReadLine());
+					_n = int.Parse(rd.ReadLine());
 				}
 			}
 			catch (IOException)
@@ -49,20 +49,26 @@ namespace Encryption
         {
 			using(StreamWriter writer = new StreamWriter(keyFile))
             {
-				writer.WriteLine(BitConverter.GetBytes(d));
-				writer.WriteLine(BitConverter.GetBytes(n));
-				writer.WriteLine(BitConverter.GetBytes(e));
+				writer.WriteLine(BitConverter.GetBytes(_d));
+				writer.WriteLine(BitConverter.GetBytes(_n));
+				writer.WriteLine(BitConverter.GetBytes(_e));
             }
         }
 
+		/// <summary>
+		/// Generates the private and public key
+		/// </summary>
+		/// <param name="p"></param>
+		/// <param name="q"></param>
+		/// <param name="e"></param>
 		public override void CreateKeys(int p, int q, int e)
 		{
 			p = FindPrime(p);
 			q = FindPrime(q);
-			n = p * q;
+			_n = p * q;
 			int phi_n = Phi(p, q);
-			e = Exposant(e, phi_n);
-			d = ExtendedEuclide(e, phi_n);
+			_e = Exposant(e, phi_n);
+			_d = ExtendedEuclide(_e, phi_n);
 		}
 
 

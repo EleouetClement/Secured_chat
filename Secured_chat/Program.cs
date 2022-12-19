@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Encryption;
 
 
 namespace Secured_chat
@@ -39,6 +40,9 @@ namespace Secured_chat
         {
             ChatManager chatManager = ChatManager.GetInstance();
             chatManager.SetNetwotkInfo();
+            RSASmallKey key = new RSASmallKey();
+            key.CreateKeys(23541, 35532, 15542);
+            chatManager.SetKey(key);
         }
     }
 }

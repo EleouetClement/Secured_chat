@@ -64,7 +64,7 @@ namespace Secured_chat
             this.Connexion.Name = "Connexion";
             this.Connexion.Size = new System.Drawing.Size(121, 21);
             this.Connexion.TabIndex = 5;
-            this.Connexion.Text = "button1";
+            this.Connexion.Text = "Connexion";
             this.Connexion.UseVisualStyleBackColor = true;
             this.Connexion.Click += new System.EventHandler(this.Connexion_Click);
             // 
