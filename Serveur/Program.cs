@@ -238,10 +238,17 @@ namespace Serveur
                 string message = senderName + "," + messageInfo[0];               
                 byte [] byteMessage = Encoding.ASCII.GetBytes(message);
                 //Setting temporary socket to send message to the client listening port
-                Socket receiverListeningSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                receiverListeningSocket.Connect(new IPEndPoint(receiverAddress, receiverMessagePort));
-                receiverListeningSocket.Send(byteMessage, 0, byteMessage.Length, SocketFlags.None);
-                receiverListeningSocket.Close();
+                Socket messageSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                try
+                {
+                    messageSocket.Connect(new IPEndPoint(receiverAddress, receiverMessagePort));
+                    messageSocket.Send(byteMessage, 0, byteMessage.Length, SocketFlags.None);
+                }catch(Exception ex)
+                {
+                    Console.WriteLine("Impossible d'enviyer le message : " + ex.Message);
+                    confirmation = Encoding.ASCII.GetBytes("ko");
+                    messageSocket.Close();
+                }
                 //Sends to the sender a confirmation
                 userSocket.BeginSend(confirmation, 0, confirmation.Length, SocketFlags.None, new AsyncCallback(SendCallBack), userSocket);
             }
