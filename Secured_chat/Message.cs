@@ -9,6 +9,7 @@
 using Secured_chat;
 using System;
 using Encryption;
+using System.Text;
 
 namespace Secured_chat
 {
@@ -23,26 +24,41 @@ namespace Secured_chat
 		public Message(string data)
 		{
 			this._data = data;
-			_encrypted = string.Empty;
+			_encrypted = data;
 		}
 
 		/// <summary>
-		/// TO DO...
+		/// decrypt a list of characters and creates the message
 		/// </summary>
 		/// <param name="key"></param>
 		/// <exception cref="NotImplementedException"></exception>
         public void Decrypt(RSAKey<int> key)
         {
-            throw new NotImplementedException();
-        }
+            string [] encryptedTab = _encrypted.Split('|');
+			string tmp = string.Empty;
+			Tuple<int, int> priv = key.PrivateKey;
+			foreach(string s in encryptedTab)
+            {
+				if(s!=null && s!= "")
+					tmp += Math.Pow(double.Parse(s), priv.Item1) % priv.Item2;
+            }
+			_data = tmp;
+		}
 
 		/// <summary>
-		/// TO DO...
+		/// Created a string with all caracters encrypted and separated by ","
 		/// </summary>
 		/// <param name="key"></param>
         public void Encrypt(RSAKey<int> key)
         {
-            
+			Tuple<int, int> pub = key.PublicKey;
+			_encrypted=string.Empty;
+            foreach(char c in _data)
+            {
+				_encrypted+= ((int)(Math.Pow(CharValue(c), pub.Item1) % pub.Item2)).ToString();
+				if(c != _data[_data.Length - 1])
+					_encrypted += "|";
+            }
         }
 
 		public string Data
@@ -63,6 +79,11 @@ namespace Secured_chat
 		public void MessageSeen()
         {
 			_seen = true;
+        }
+
+		private double CharValue(char c)
+        {
+			return (double)c;
         }
     }
 }

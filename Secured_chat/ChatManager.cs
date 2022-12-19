@@ -155,7 +155,8 @@ namespace Secured_chat
                     Message m = new Message(message[1]);
                     if (!_chats.TryGetValue(message[0], out chat))
                     {
-                        chat = new Chat(message[0]);                                              
+                        chat = new Chat(message[0]);
+                        m.Decrypt(_userKey);//Decrypt the message to be readable
                         chat.AddMessage(m);
                         chat.RequestShow();
                         _chats.Add(message[0], chat);

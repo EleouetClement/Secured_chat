@@ -43,7 +43,6 @@ namespace Serveur
         static void Main(string[] args)
         {
             //Initalisation du serveur
-            Service chatUserManager = new Service(5);
             _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _backlog = 5;
             _port = 5000;
@@ -235,7 +234,7 @@ namespace Serveur
             byte[] confirmation = Encoding.ASCII.GetBytes("ok");
             if (receiverAddress != null)
             {//Receiver found
-                string message = senderName + "," + messageInfo[0];               
+                string message = senderName + "," + messageInfo[1];               
                 byte [] byteMessage = Encoding.ASCII.GetBytes(message);
                 //Setting temporary socket to send message to the client listening port
                 Socket messageSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

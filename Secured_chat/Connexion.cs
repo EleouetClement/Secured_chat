@@ -136,8 +136,7 @@ namespace Secured_chat
             string result = string.Empty;
             try
             {
-                //pubKey = ChatManager.GetInstance().UserKey.PublicKey;
-                pubKey = new Tuple<int, int>(26843, 984321);//TO CHANGE
+                pubKey = ChatManager.GetInstance().UserKey.PublicKey;
             }catch(NullReferenceException e)
             {
                 throw e;
@@ -183,7 +182,7 @@ namespace Secured_chat
         /// <param name="message"></param>
         public void SendMessage(string receiver, Message message)
         {
-            string [] args  = { receiver, message.Data };
+            string [] args  = { receiver, message.Encrypted };
             if(SendRequest(RequestType.message, args) != "ok")
             {
                 throw new Exception("Une erreur est survenue, message non distribué");

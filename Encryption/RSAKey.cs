@@ -11,9 +11,9 @@ namespace Encryption
     /// </summary>
     public abstract class RSAKey<T>
     {
-        protected T e;
-        protected T d;
-        protected T n;
+        protected T _e;
+        protected T _d;
+        protected T _n;
 
 		/// <summary>
 		/// Return the public key as a Tuple, first value is e and the second is n
@@ -22,7 +22,7 @@ namespace Encryption
 		{
 			get
 			{
-				return new Tuple<T, T>(e, n);
+				return new Tuple<T, T>(_e, _n);
 			}
 		}
 
@@ -33,15 +33,15 @@ namespace Encryption
 		{
 			get
 			{
-				return new Tuple<T, T>(d, n);
+				return new Tuple<T, T>(_d, _n);
 			}
 		}
 
 
         public virtual void SetPublicKey(T e, T n)
         {
-            this.e = e;
-            this.n = n;
+            this._e = e;
+            this._n = n;
         }
 
 		/// <summary>
