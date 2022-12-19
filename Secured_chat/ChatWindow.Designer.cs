@@ -30,7 +30,7 @@ namespace Secured_chat
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.Dialogbox = new System.Windows.Forms.RichTextBox();
+            this.dialogBox = new System.Windows.Forms.RichTextBox();
             this.messageBox = new System.Windows.Forms.RichTextBox();
             this.sendButton = new System.Windows.Forms.Button();
             this.receiverName = new System.Windows.Forms.Label();
@@ -46,14 +46,14 @@ namespace Secured_chat
             this.label1.TabIndex = 0;
             this.label1.Text = "Dialogue";
             // 
-            // Dialogbox
+            // dialogBox
             // 
-            this.Dialogbox.Location = new System.Drawing.Point(12, 57);
-            this.Dialogbox.Name = "Dialogbox";
-            this.Dialogbox.ReadOnly = true;
-            this.Dialogbox.Size = new System.Drawing.Size(327, 530);
-            this.Dialogbox.TabIndex = 1;
-            this.Dialogbox.Text = "";
+            this.dialogBox.Location = new System.Drawing.Point(12, 57);
+            this.dialogBox.Name = "dialogBox";
+            this.dialogBox.ReadOnly = true;
+            this.dialogBox.Size = new System.Drawing.Size(327, 530);
+            this.dialogBox.TabIndex = 1;
+            this.dialogBox.Text = "";
             // 
             // messageBox
             // 
@@ -100,7 +100,7 @@ namespace Secured_chat
             this.Controls.Add(this.receiverName);
             this.Controls.Add(this.sendButton);
             this.Controls.Add(this.messageBox);
-            this.Controls.Add(this.Dialogbox);
+            this.Controls.Add(this.dialogBox);
             this.Controls.Add(this.label1);
             this.Name = "ChatWindow";
             this.Text = "ChatWindow";
@@ -116,6 +116,6 @@ namespace Secured_chat
         private System.Windows.Forms.Button sendButton;
         public System.Windows.Forms.Label receiverName;
         private System.Windows.Forms.Label label2;
-        public System.Windows.Forms.RichTextBox Dialogbox;
+        public System.Windows.Forms.RichTextBox dialogBox;
     }
 }

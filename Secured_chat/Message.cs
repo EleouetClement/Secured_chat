@@ -19,6 +19,7 @@ namespace Secured_chat
 	{
 		string _data;
 		string _encrypted;
+		bool _seen = false;
 		public Message(string data)
 		{
 			this._data = data;
@@ -52,6 +53,16 @@ namespace Secured_chat
 		public string Encrypted
         {
 			get { return _encrypted; }
+        }
+
+		public bool Expired
+        {
+			get { return _seen; }
+        }
+
+		public void MessageSeen()
+        {
+			_seen = true;
         }
     }
 }

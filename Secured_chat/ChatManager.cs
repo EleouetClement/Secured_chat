@@ -15,14 +15,12 @@ namespace Secured_chat
     /// </summary>
     internal class ChatManager
     {
-        Dictionary<string, Chat> _chats;
+        static Dictionary<string, Chat> _chats;
 
         int _port;
         int _backlog;
         IPAddress _ip;
         RSASmallKey _userKey;
-
-        private Thread _thread;
         private bool _isListening = false;
         byte[] _buffer;
         static ChatManager Instance;
@@ -41,6 +39,10 @@ namespace Secured_chat
             return Instance;
         }
 
+        public static Dictionary<string, Chat> AllChats
+        { 
+            get { return _chats; } 
+        }
         /// <summary>
         /// Sets the listening socket informations
         /// </summary>
@@ -86,7 +88,8 @@ namespace Secured_chat
         /// <param name="chat"></param>
         public void AddChat(Chat chat)
         {
-            _chats.Add(chat.Receiver, chat);
+            if(!_chats.ContainsKey(chat.Receiver))
+                _chats.Add(chat.Receiver, chat);
         }
 
         /// <summary>
@@ -98,11 +101,9 @@ namespace Secured_chat
             {
                 try
                 {
-                    _thread = new Thread(new ThreadStart(this.ListenForMessages));
-                    _thread.IsBackground = true;
-                    _thread.Start();
-                    _isListening = true;
-                }catch (Exception ex)
+                    ListenForMessages();
+                }
+                catch (Exception ex)
                 {
                     _isListening = false;
                     throw new Exception("Impossible de recevoir des messages Erreur : " + ex.Message);
@@ -137,8 +138,39 @@ namespace Secured_chat
         private void ReceiveCallBack(IAsyncResult AR)
         {
             Socket socket = (Socket)AR.AsyncState;
+            int receivedData = socket.EndReceive(AR);
+            byte[] buffer = new byte[receivedData];
+            Array.Copy(_buffer, buffer, receivedData);
+            string stringData = Encoding.ASCII.GetString(buffer);
+            string[] message = stringData.Split(',');
+            if(message.Length != 2)
+            {
 
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+            }
+            else
+            {
+                lock(_chats)
+                {
+                    Chat chat = null;
+                    Message m = new Message(message[1]);
+                    if (!_chats.TryGetValue(message[0], out chat))
+                    {
+                        chat = new Chat(message[0]);                                              
+                        chat.AddMessage(m);
+                        chat.RequestShow();
+                        _chats.Add(message[0], chat);
+
+                    }
+                    else
+                    {
+                        chat.RequestShow();
+                        chat.AddMessage(m);
+                    }
+                }
+            }
         }
+
+
+
     }
 }

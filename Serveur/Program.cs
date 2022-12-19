@@ -244,10 +244,14 @@ namespace Serveur
                     messageSocket.Connect(new IPEndPoint(receiverAddress, receiverMessagePort));
                     messageSocket.Send(byteMessage, 0, byteMessage.Length, SocketFlags.None);
                     Console.WriteLine("> Envoi de " + message);
-                }catch(Exception ex)
+                    messageSocket.Disconnect(true);
+                    messageSocket.Close();
+                }
+                catch(Exception ex)
                 {
                     Console.WriteLine("Impossible d'enviyer le message : " + ex.Message);
                     confirmation = Encoding.ASCII.GetBytes("ko");
+                    messageSocket.Disconnect(true);
                     messageSocket.Close();
                 }
                 //Sends to the sender a confirmation
