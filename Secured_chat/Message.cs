@@ -53,11 +53,13 @@ namespace Secured_chat
         {
 			Tuple<int, int> pub = key.PublicKey;
 			_encrypted=string.Empty;
+			int i = 0;
             foreach(char c in _data)
             {
 				_encrypted+= ((int)(Math.Pow(CharValue(c), pub.Item1) % pub.Item2)).ToString();
-				if(c != _data[_data.Length - 1])
+				if(i < _data.Length-1)
 					_encrypted += "|";
+				i++;
             }
         }
 
