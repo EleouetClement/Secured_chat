@@ -24,11 +24,12 @@ namespace Secured_chat
 
         private Thread _thread;
         private bool _isListening = false;
-
+        byte[] _buffer;
         static ChatManager Instance;
         private ChatManager()
         {
-            _chats = new Dictionary<string, Chat>();            
+            _chats = new Dictionary<string, Chat>();    
+            _buffer = new byte[1024];
         }
 
         public static ChatManager GetInstance()
@@ -116,35 +117,28 @@ namespace Secured_chat
         {
             Socket userSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             userSocket.Bind(new IPEndPoint(_ip, _port));
-            userSocket.Listen(_backlog);         
-            Chat chat = null;
-            byte [] received = new byte[Connexion.GetInstance().BufferSize];
-            while (true)
-            {
-                userSocket.Accept();
-                int reception = userSocket.Receive(received);
-                byte[] data = new byte[reception];
-                Array.Copy(received, data, reception);
-                string message = Encoding.ASCII.GetString(data);
-                string [] messageInfo = message.Split(',');
-                lock(_chats)
-                {
-                    Message newMessage = new Message(messageInfo[1]);
-                    if(_chats.TryGetValue(messageInfo[0], out chat))
-                    {
-                        chat.AddMessage(newMessage);
-                    }
-                    else
-                    {
-                        chat = new Chat(messageInfo[0]);
-                        chat.AddMessage(newMessage);
-                        _chats.Add(messageInfo[0], chat);
-                        chat.Show();
-                        chat.SetBoxName();
-                    }
-                }
-            }
+            userSocket.Listen(_backlog);
+            userSocket.BeginAccept(new AsyncCallback(AcceptCallback), userSocket);
+
         }
 
+        private void AcceptCallback(IAsyncResult AR)
+        {
+            Socket server = (Socket)AR.AsyncState;
+            Socket socket = server.EndAccept(AR);           
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+            server.BeginAccept(new AsyncCallback(AcceptCallback), null);
+        }
+
+        /// <summary>
+        /// Defines the operations to do when a message comes
+        /// </summary>
+        /// <param name="AR"></param>
+        private void ReceiveCallBack(IAsyncResult AR)
+        {
+            Socket socket = (Socket)AR.AsyncState;
+
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), socket);
+        }
     }
 }
